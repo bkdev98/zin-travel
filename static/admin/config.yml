@@ -1,0 +1,38 @@
+backend:
+  name: git-gateway
+
+media_folder: static/assets
+public_folder: assets
+
+slug: { encoding: ascii, clean_accents: true }
+
+collections:
+  - name: services
+    label: Dịch vụ
+    folder: static/services
+    create: true
+    fields:
+      - { name: title, label: Tên dịch vụ, widget: string }
+      - name: type
+        label: Loại hình
+        widget: select
+        options:
+          - { label: Khách sạn, value: hotel }
+          - { label: Sân golf, value: golf }
+          - { label: Nhà hàng, value: restaurant }
+      - { name: address, label: Địa chỉ, widget: string }
+      - name: images
+        label: Hình ảnh
+        widget: list
+        field: { label: Hình ảnh, name: image, widget: image }
+      - { name: body, label: Mô tả, widget: markdown }
+  - name: articles
+    label: Bài viết
+    folder: static/articles
+    create: true
+    fields:
+      - { name: title, label: Tiêu đề, widget: string }
+      - { name: createdAt, label: Ngày đăng, widget: date, format: DD/MM/YYYY }
+      - { name: thumbnail, label: Hình ảnh, widget: image }
+      - { name: body, label: Nội dung, widget: markdown }
+      - { name: tags, label: Thẻ bài viết, widget: list }
