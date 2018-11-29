@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { StaticQuery, graphql } from 'gatsby';
+import { StaticQuery, graphql, Link } from 'gatsby';
 import Img from 'gatsby-image';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
@@ -40,12 +40,14 @@ const SubTitle = styled.h3`
   font-weight: 300;
   letter-spacing: 0.4px;
   font-size: 30px;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h1`
   font-weight: 600;
   letter-spacing: 0.4px;
   font-size: 44px;
+  margin-bottom: 20px;
 `;
 
 const SearchForm = styled.div`
@@ -102,28 +104,15 @@ const HeroNavigation = styled.div`
   position: absolute;
   width: 100%;
   top: 25px;
+`;
+
+const NavInner = styled.div`
+  max-width: 1200px;
+  margin: 0px auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 150px;
 `;
-
-// const ZinLogo = () => (
-//   <StaticQuery
-//     query={graphql`
-//       query {
-//         placeholderImage: file(relativePath: { eq: "logo-white.png" }) {
-//           childImageSharp {
-//             fluid(maxWidth: 200) {
-//               ...GatsbyImageSharpFluid
-//             }
-//           }
-//         }
-//       }
-//     `}
-//     render={data => <Logo fluid={data.placeholderImage.childImageSharp.fluid} />}
-//   />
-// );
 
 const NavContainer = styled.div`
   display: flex;
@@ -141,10 +130,29 @@ const NavItems = styled.div`
   align-items: center;
 `;
 
-const NavItem = styled.a`
+const NavItem = styled(Link)`
   color: white;
   font-size: 16px;
   margin-left: 25px;
+  text-decoration: none;
+  position: relative;
+  ::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease-in-out;
+    transition-delay: 0.1s;
+  }
+  :hover::after {
+    transform: scaleX(1);
+    transition-delay: 0s;
+  }
 `;
 
 const ContactButton = styled.button`
@@ -155,6 +163,10 @@ const ContactButton = styled.button`
   font-size: 16px;
   color: white;
   padding: 5px 20px;
+  transition: background 0.4s ease-in-out;
+  :hover {
+    background: rgba(255,255,255,0.1);
+  }
 `;
 
 const BGImage = () => (
@@ -187,25 +199,27 @@ class Hero extends Component {
     return (
       <Wrapper>
         <HeroNavigation>
-          <Logo src={logo} />
-          <NavContainer>
-            <TopContact>
-              <NavItem>lienhe@zintravel.vn</NavItem>
-              <NavItem>0917 679 524</NavItem>
-              <NavItem>Tiếng Việt</NavItem>
-            </TopContact>
-            <NavItems>
-              <NavItem>Trang Chủ</NavItem>
-              <NavItem>Khách Sạn</NavItem>
-              <NavItem>Sân Golf</NavItem>
-              <NavItem>Nhà Hàng</NavItem>
-              <NavItem>Tin Tức</NavItem>
-              <ContactButton>Liên Hệ</ContactButton>
-            </NavItems>
-          </NavContainer>
+          <NavInner>
+            <Logo src={logo} />
+            <NavContainer>
+              <TopContact>
+                <NavItem>lienhe@zintravel.vn</NavItem>
+                <NavItem>0917 679 524</NavItem>
+                <NavItem>Tiếng Việt</NavItem>
+              </TopContact>
+              <NavItems>
+                <NavItem>Trang Chủ</NavItem>
+                <NavItem>Khách Sạn</NavItem>
+                <NavItem>Sân Golf</NavItem>
+                <NavItem>Nhà Hàng</NavItem>
+                <NavItem>Tin Tức</NavItem>
+                <ContactButton>Liên Hệ</ContactButton>
+              </NavItems>
+            </NavContainer>
+          </NavInner>
         </HeroNavigation>
-        <SubTitle>{title}</SubTitle>
-        <Title>{subTitle}</Title>
+        <SubTitle>{subTitle}</SubTitle>
+        <Title>{title}</Title>
         <SearchForm>
           <SearchOption value={searchType} onChange={this.handleChangeType}>
             <MenuItem value='hotel'>Tìm Phòng</MenuItem>

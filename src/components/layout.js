@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
 
 import Navbar from './navbar';
+import Footer from './footer';
 import './layout.css';
 
 const Layout = ({ hideNavbar, children }) => (
@@ -29,9 +30,8 @@ const Layout = ({ hideNavbar, children }) => (
           <html lang="en" />
         </Helmet>
         {!hideNavbar && <Navbar siteTitle={data.site.siteMetadata.title} />}
-        <div>
-          {children}
-        </div>
+        {children}
+        <Footer />
       </>
     )}
   />

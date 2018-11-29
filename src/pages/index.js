@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import Layout from '../components/layout';
 import Hero from '../components/hero';
+import ServiceCard from '../components/service-card';
 
 const styles = theme => ({
   button: {
@@ -18,16 +20,19 @@ const styles = theme => ({
 
 const Title = styled.h3`
   font-weight: 600;
+  margin-bottom: 20px;
 `;
 
 const SubTitle = styled.p`
+  margin-bottom: 15px;
   font-size: 16px;
-  color: #1B1B1B;
-  margin-top: 15px;
+  color: #4A4A4A;
 `;
 
 const Wrapper = styled.div`
-  padding: 70px 130px 0px;
+  padding: 50px 0px 0px;
+  max-width: 1200px;
+  margin: 0px auto;
 `;
 
 const CategoryList = styled.div`
@@ -57,6 +62,32 @@ const Category = styled(Button)`
   }
 `;
 
+const ShowAll = styled(Link)`
+  color: #D4AF65;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0px;
+  text-decoration: none;
+  position: relative;
+  ::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #D4AF65;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease-in-out;
+    transition-delay: 0.1s;
+  }
+  :hover::after {
+    transform: scaleX(1);
+    transition-delay: 0s;
+  }
+`;
+
 const IndexPage = ({ data: { home } }) => (
   <Layout hideNavbar>
     <Hero title={home.edges[0].node.title} subTitle={home.edges[0].node.subTitle} />
@@ -75,9 +106,47 @@ const IndexPage = ({ data: { home } }) => (
       </CategoryList>
     </Wrapper>
     <Wrapper>
-      <Title>{home.title}</Title>
-      <SubTitle>{home.golfImage}</SubTitle>
-
+      <Title>Ưu đãi từ Zin Travel</Title>
+      <SubTitle>Những dịch vụ nóng hổi gần bạn nhất</SubTitle>
+      <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <Row>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+          <Col lg={3} md={6} sm={12}>
+            <ServiceCard />
+          </Col>
+        </Row>
+      </Grid>
+      <ShowAll>Tất cả ưu đãi (100+)</ShowAll>
+    </Wrapper>
+    <Wrapper>
+      <Title>Tin tức mới nhất về du lịch</Title>
+      <ShowAll>Đọc thêm (20+)</ShowAll>
     </Wrapper>
   </Layout>
 );
