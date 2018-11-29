@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import { graphql } from 'gatsby';
 
 import Layout from '../components/layout';
 import Hero from '../components/hero';
@@ -42,7 +43,9 @@ const Category = styled(Button)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  background-image: url('https://source.unsplash.com/572x280/');
+  background-image: url(${props => props.image});
+  background-position: center;
+  background-size: cover;
   && {
     text-transform: none;
     margin-right: 20px;
@@ -54,29 +57,45 @@ const Category = styled(Button)`
   }
 `;
 
-const IndexPage = ({ classes }) => (
+const IndexPage = ({ data: { home } }) => (
   <Layout hideNavbar>
-    <Hero />
+    <Hero title={home.edges[0].node.title} subTitle={home.edges[0].node.subTitle} />
     <Wrapper>
       <Title>Dịch vụ dành cho bạn</Title>
       <CategoryList>
-        <Category>
+        <Category image={home.edges[0].node.hotelImage}>
           <p>Khách Sạn</p>
         </Category>
-        <Category>
+        <Category image={home.edges[0].node.golfImage}>
           <p>Sân Golf</p>
         </Category>
-        <Category>
+        <Category image={home.edges[0].node.restaurantImage}>
           <p>Nhà Hàng</p>
         </Category>
       </CategoryList>
     </Wrapper>
     <Wrapper>
-      <Title>Ưu đãi từ Zin Travel</Title>
-      <SubTitle>Những dịch vụ nóng hổi gần bạn nhất</SubTitle>
+      <Title>{home.title}</Title>
+      <SubTitle>{home.golfImage}</SubTitle>
 
     </Wrapper>
   </Layout>
 );
 
 export default withStyles(styles)(IndexPage);
+
+export const pageQuery = graphql`
+  query IndexQuery {
+    home: allPagesYaml(filter: { title: { ne: null } }) {
+      edges {
+        node {
+          title
+          subTitle
+          golfImage
+          hotelImage
+          restaurantImage
+        }
+      }
+    }
+  }
+`;

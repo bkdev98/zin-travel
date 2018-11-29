@@ -182,6 +182,7 @@ class Hero extends Component {
   }
 
   render() {
+    const { title, subTitle } = this.props;
     const { searchType } = this.state;
     return (
       <Wrapper>
@@ -203,8 +204,8 @@ class Hero extends Component {
             </NavItems>
           </NavContainer>
         </HeroNavigation>
-        <SubTitle>Dịch vụ tốt nhất</SubTitle>
-        <Title>Cho Chuyến Du Lịch Của Bạn</Title>
+        <SubTitle>{title}</SubTitle>
+        <Title>{subTitle}</Title>
         <SearchForm>
           <SearchOption value={searchType} onChange={this.handleChangeType}>
             <MenuItem value='hotel'>Tìm Phòng</MenuItem>
