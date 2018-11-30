@@ -28,16 +28,6 @@ collections:
     editor:
       preview: false
     fields:
-      - { name: title, label: Tên dịch vụ, widget: string }
-      - name: language
-        label: Ngôn ngữ
-        widget: select
-        default: vietnamese
-        options:
-          - { label: Tiếng Việt, value: vietnamese }
-          - { label: Tiếng Anh, value: english }
-          - { label: Tiếng Hàn, value: korean }
-          - { label: Tiếng Nhật, value: japanese }
       - name: type
         label: Loại hình
         widget: select
@@ -45,13 +35,22 @@ collections:
           - { label: Khách sạn, value: hotel }
           - { label: Sân golf, value: golf }
           - { label: Nhà hàng, value: restaurant }
-      - { name: address, label: Địa chỉ, widget: string }
+      - { name: title, label: Tên dịch vụ (Tiếng Việt), widget: string }
+      - { name: titleEng, label: Tên dịch vụ (Tiếng Anh), widget: string, required: false }
+      - { name: titleKor, label: Tên dịch vụ (Tiếng Hàn), widget: string, required: false }
+      - { name: address, label: Địa chỉ (Tiếng Việt), widget: string }
+      - { name: addressEng, label: Địa chỉ (Tiếng Anh), widget: string, required: false }
+      - { name: addressKor, label: Địa chỉ (Tiếng Hàn), widget: string, required: false }
       - name: images
         label: Hình ảnh
         widget: list
         field: { label: Hình ảnh, name: image, widget: image }
-      - { name: body, label: Mô tả, widget: markdown }
-      - { name: price, label: Giá, widget: string }
+      - { name: body, label: Mô tả (Tiếng Việt), widget: markdown }
+      - { name: bodyEng, label: Mô tả (Tiếng Anh), widget: markdown, required: false }
+      - { name: bodyKor, label: Mô tả (Tiếng Hàn), widget: markdown, required: false }
+      - { name: price, label: Giá (Tiếng Việt), widget: string }
+      - { name: priceEng, label: Giá (Tiếng Anh), widget: string, required: false }
+      - { name: priceKor, label: Giá (Tiếng Hàn), widget: string, required: false }
       - { name: featured, label: Hiện lên trang chủ, widget: boolean, default: true }
       - { name: createdAt, label: Ngày đăng, widget: date, format: DD/MM/YYYY }
       - name: utilities
@@ -67,7 +66,9 @@ collections:
               - { label: Nước nóng, value: hot-water }
               - { label: Giặt ủi, value: laundry }
               - { label: Điều hoà, value: air-conditioner }
-          - { name: title, label: Tên tiện ích, widget: string }
+          - { name: title, label: Tên tiện ích (Tiếng Việt), widget: string }
+          - { name: titleEng, label: Tên tiện ích (Tiếng Anh), widget: string, required: false  }
+          - { name: titleKor, label: Tên tiện ích (Tiếng Hàn), widget: string, required: false  }
       - { name: sokhach, label: Số khách (nếu có), widget: number, required: false, hint: 'Số khách tối đa của dịch vụ phòng khách sạn' }
       - { name: sogiuong, label: Số giường (nếu có), widget: number, required: false , hint: 'Số giường của dịch vụ phòng khách sạn'}
       - { name: sophongtam, label: Số phòng tắm (nếu có), widget: number, required: false , hint: 'Số phòng tắm của dịch vụ phòng khách sạn'}

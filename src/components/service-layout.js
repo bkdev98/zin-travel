@@ -7,6 +7,7 @@ import ImageGallery from 'react-image-gallery';
 import { IoIosBookmark, IoMdShare } from 'react-icons/io';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import ShowMore from 'react-show-more';
+import { MdPeople, MdHotel, MdHotTub } from 'react-icons/md';
 
 import Navbar from './navbar';
 import Footer from './footer';
@@ -105,7 +106,7 @@ const ActionButton = styled.button`
   }
 `;
 
-const Meta = styled.h5`
+const Information = styled.h5`
   font-weight: 400;
   font-size: 16px;
   text-transform: uppercase;
@@ -113,9 +114,26 @@ const Meta = styled.h5`
   color: #4A4A4A;
 `;
 
+const Meta = styled.div`
+  font-size: 15px;
+  color: #4A4A4A;
+  font-weight: 600;
+  margin-bottom: 15px;
+  div {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    svg {
+      font-size: 18px;
+      margin-right: 5px;
+    }
+  }
+`;
+
 const Title = styled.h1`
   font-size: 28px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 `;
 
 const Divider = styled.div`
@@ -192,8 +210,19 @@ class Layout extends Component {
               <Row>
                 <Col md={12} lg={8}>
                   <Left>
-                    <Meta>{typeToText(service.frontmatter.type)} • Hồ Chí Minh</Meta>
+                    <Information>{typeToText(service.frontmatter.type)} • Hồ Chí Minh</Information>
                     <Title>{service.frontmatter.title}</Title>
+                    <Meta>
+                      {service.frontmatter.sokhach && (
+                        <div><MdPeople />{service.frontmatter.sokhach} khách</div>
+                      )}
+                      {service.frontmatter.sogiuong && (
+                        <div><MdHotel />{service.frontmatter.sogiuong} giường</div>
+                      )}
+                      {service.frontmatter.sophongtam && (
+                        <div><MdHotTub />{service.frontmatter.sophongtam} phòng tắm</div>
+                      )}
+                    </Meta>
                     <Content>
                       <ShowMore lines={4} more={<TruncateButton isMore />} less={<TruncateButton />}>
                         <div dangerouslySetInnerHTML={{ __html: service.html }} />
@@ -230,6 +259,9 @@ export const query = graphql`
         type
         images
         createdAt
+        sokhach
+        sogiuong
+        sophongtam
       }
     }
   }
