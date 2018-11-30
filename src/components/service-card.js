@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'gatsby';
 
-import image from '../../static/assets/jonathan-percy-501302-unsplash.jpg';
+import { typeToText } from '../utils/string';
 
 const Wrapper = styled.div`
   a {
@@ -12,14 +12,16 @@ const Wrapper = styled.div`
   margin-bottom: 15px;
 `;
 
-const FeaturedImage = styled.div`
-  background-image: url(${image});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+const FeaturedImage = styled.img`
   background-color: #D4AF65;
   border-radius: 6px;
   height: 200px;
+  width: 100%;
+  filter: brightness(85%);
+  transition: all 0.4s ease;
+  ${Wrapper}:hover & {
+    filter: brightness(120%);
+  }
 `;
 
 const Category = styled.h5`
@@ -41,15 +43,15 @@ const Price = styled.p`
   margin-bottom: 5px;
 `;
 
-const ServiceCard = () => (
+const ServiceCard = ({ data, slug }) => (
   <Wrapper>
-    <Link>
-      <FeaturedImage />
+    <Link to={`dich-vu${slug}`}>
+      <FeaturedImage src={data.images[0]} alt={data.title} />
       <Category>
-        <span>Khách sạn </span> • <span> Hồ Chí Minh</span>
+        <span>{typeToText(data.type)} </span> • <span> Hồ Chí Minh</span>
       </Category>
-      <Title>Phòng đôi khách sạn Quang Trung</Title>
-      <Price>1.500.000đ / đêm</Price>
+      <Title>{data.title}</Title>
+      <Price>{data.price}</Price>
     </Link>
   </Wrapper>
 );

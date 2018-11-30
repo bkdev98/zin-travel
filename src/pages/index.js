@@ -88,7 +88,7 @@ const ShowAll = styled(Link)`
   }
 `;
 
-const IndexPage = ({ data: { home } }) => (
+const IndexPage = ({ data: { home, services } }) => (
   <Layout hideNavbar>
     <Hero title={home.edges[0].node.title} subTitle={home.edges[0].node.subTitle} />
     <Wrapper>
@@ -110,36 +110,11 @@ const IndexPage = ({ data: { home } }) => (
       <SubTitle>Những dịch vụ nóng hổi gần bạn nhất</SubTitle>
       <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Row>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
-          <Col lg={3} md={6} sm={12}>
-            <ServiceCard />
-          </Col>
+          {services.edges.map(({ node }) => (
+            <Col lg={3} md={6} sm={12} key={node.id}>
+              <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+            </Col>
+          ))}
         </Row>
       </Grid>
       <ShowAll>Tất cả ưu đãi (100+)</ShowAll>
@@ -163,6 +138,26 @@ export const pageQuery = graphql`
           golfImage
           hotelImage
           restaurantImage
+        }
+      }
+    }
+    services: allMarkdownRemark(
+      filter: { fileAbsolutePath: { regex: "/services/" } }
+      sort: { fields: [frontmatter___createdAt], order: ASC }
+    ) {
+      edges {
+        node {
+          id
+          frontmatter {
+            title
+            createdAt
+            images
+            type
+            address
+          }
+          fields {
+            slug
+          }
         }
       }
     }

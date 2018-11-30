@@ -621,3 +621,9 @@ pre tt:after {
     font-size: 100%;
   }
 }
+.no-display {
+  display: none;
+}
+.gallery-img {
+  height: 90vh;
+}

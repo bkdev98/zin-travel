@@ -29,7 +29,7 @@ const Layout = ({ hideNavbar, children }) => (
         >
           <html lang="en" />
         </Helmet>
-        {!hideNavbar && <Navbar siteTitle={data.site.siteMetadata.title} />}
+        {!hideNavbar && <Navbar />}
         {children}
         <Footer />
       </>

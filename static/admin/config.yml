@@ -9,6 +9,8 @@ slug: { encoding: ascii, clean_accents: true }
 collections:
   - name: pages
     label: Cấu hình
+    editor:
+      preview: false
     files:
       - name: home
         label: Trang chủ
@@ -23,8 +25,19 @@ collections:
     label: Dịch vụ
     folder: static/services
     create: true
+    editor:
+      preview: false
     fields:
       - { name: title, label: Tên dịch vụ, widget: string }
+      - name: language
+        label: Ngôn ngữ
+        widget: select
+        default: vietnamese
+        options:
+          - { label: Tiếng Việt, value: vietnamese }
+          - { label: Tiếng Anh, value: english }
+          - { label: Tiếng Hàn, value: korean }
+          - { label: Tiếng Nhật, value: japanese }
       - name: type
         label: Loại hình
         widget: select
@@ -38,6 +51,28 @@ collections:
         widget: list
         field: { label: Hình ảnh, name: image, widget: image }
       - { name: body, label: Mô tả, widget: markdown }
+      - { name: price, label: Giá, widget: string }
+      - { name: featured, label: Hiện lên trang chủ, widget: boolean, default: true }
+      - { name: createdAt, label: Ngày đăng, widget: date, format: DD/MM/YYYY }
+      - name: utilities
+        label: Tiện nghi
+        widget: list
+        required: false
+        fields:
+          - name: icon
+            label: Icon
+            widget: select
+            options:
+              - { label: Wifi, value: wifi }
+              - { label: Nước nóng, value: hot-water }
+              - { label: Giặt ủi, value: laundry }
+              - { label: Điều hoà, value: air-conditioner }
+          - { name: title, label: Tên tiện ích, widget: string }
+      - { name: sokhach, label: Số khách (nếu có), widget: number, required: false, hint: 'Số khách tối đa của dịch vụ phòng khách sạn' }
+      - { name: sogiuong, label: Số giường (nếu có), widget: number, required: false , hint: 'Số giường của dịch vụ phòng khách sạn'}
+      - { name: sophongtam, label: Số phòng tắm (nếu có), widget: number, required: false , hint: 'Số phòng tắm của dịch vụ phòng khách sạn'}
+      - { name: solo, label: Số lỗ Golf (nếu có), widget: number, required: false , hint: 'Số lỗ Golf của dịch vụ đặt sân Golf'}
+      - { name: dientich, label: Diện tích sân (nếu có), widget: string, required: false , hint: 'Diện tích sân của dịch vụ đặt sân Golf'}
   - name: articles
     label: Bài viết
     folder: static/articles
