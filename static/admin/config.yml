@@ -31,6 +31,7 @@ collections:
       - name: type
         label: Loại hình
         widget: select
+        default: hotel
         options:
           - { label: Khách sạn, value: hotel }
           - { label: Sân golf, value: golf }

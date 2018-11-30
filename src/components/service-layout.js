@@ -8,12 +8,47 @@ import { IoIosBookmark, IoMdShare } from 'react-icons/io';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import ShowMore from 'react-show-more';
 import { MdPeople, MdHotel, MdHotTub } from 'react-icons/md';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Sticky from 'react-sticky-el';
+import axios from 'axios';
+import ReactStars from 'react-stars';
+import TextField from '@material-ui/core/TextField';
+import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 
 import Navbar from './navbar';
 import Footer from './footer';
 import TruncateButton from './truncate-button';
 import './layout.css';
 import { typeToText } from '../utils/string';
+import { getUtilityIcon } from '../utils/icon';
+import SlideArrow from './slide-arrow';
+import Map from './map';
+
+const styles = () => ({
+  outline: {
+    padding: '14px 10px !important',
+  },
+  input: {
+    fontSize: '16px !important',
+  },
+  button: {
+    marginTop: 10,
+    color: 'white',
+    textTransform: 'none',
+  },
+});
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#D4AF65',
+    },
+  },
+});
 
 const Wrapper = styled.div`
   margin-top: 80px;
@@ -41,9 +76,12 @@ const Content = styled.div`
 const Right = styled.div`
   margin-top: 30px;
   min-height: 200px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid #d8d8d8;
   width: 100%;
+  margin-left: 15px;
+  background: white;
+  padding: 20px;
 `;
 
 const ImageWrapper = styled.div`
@@ -145,11 +183,62 @@ const Divider = styled.div`
 
 const SectionTitle = styled.h3`
   font-size: 16px;
+  margin-bottom: 15px;
   color: #4A4A4A;
 `;
 
+const Utilities = styled.div`
+  span {
+    color: #4A4A4A;
+    font-size: 16px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    svg {
+      margin-right: 10px;
+      font-size: 22px;
+    }
+  }
+`;
+
+const Image = styled.div`
+  height: 170px;
+  width: 100%;
+  background-image: url(${props => props.image});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+`;
+
+const RelatedTitle = styled.h3`
+  font-weight: 600;
+  margin-bottom: 20px;
+`;
+
+const Price = styled.h4`
+  font-size: 20px;
+  margin-bottom: 5px;
+`;
+
 class Layout extends Component {
-  state = { showGallery: false }
+  state = { showGallery: false, location: null }
+
+  componentDidMount = async () => {
+    const encodedAddress = encodeURI(this.props.data.service.frontmatter.address);
+    const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=AIzaSyAGjf9PEag69kVcGkWpDzGo0kUQgM4aiAE`);
+    if (result && result.results) {
+      this.setState({
+        location: {
+          lat: result.results[0].geometry.location.lat,
+          lng: result.results[0].geometry.location.lng,
+        },
+      });
+    }
+  }
 
   handleShowGallery = () => {
     this.imageGallery.fullScreen();
@@ -163,12 +252,12 @@ class Layout extends Component {
   }
 
   render() {
-    const { data: { service } } = this.props;
-    const { showGallery } = this.state;
+    const { data: { service }, classes } = this.props;
+    const { showGallery, location } = this.state;
     const imageData = service.frontmatter.images.map(image => ({ original: image, thumbnail: image, originalClass: 'gallery-img' }));
 
     return (
-      <>
+      <MuiThemeProvider theme={theme}>
         <Helmet
           title={service.frontmatter.title}
           meta={[
@@ -230,26 +319,179 @@ class Layout extends Component {
                     </Content>
                     <Divider />
                     <SectionTitle>Tiện nghi</SectionTitle>
+                    <Utilities>
+                      <Row>
+                        {service.frontmatter.utilities.map(utility => (
+                          <Col key={utility.title} xs={12} sm={6}>
+                            <span>{getUtilityIcon(utility.icon)} {utility.title}</span>
+                          </Col>
+                        ))}
+                      </Row>
+                    </Utilities>
                     <Divider />
                     <SectionTitle>Hình ảnh phòng</SectionTitle>
+                    <Slider
+                      slidesToShow={3}
+                      infinite
+                      autoplay
+                      dots={false}
+                      nextArrow={<SlideArrow type='next' />}
+                      prevArrow={<SlideArrow type='prev' />}
+                      responsive={[
+                        {
+                          breakpoint: 1024,
+                          settings: {
+                            slidesToShow: 3,
+                          },
+                        },
+                        {
+                          breakpoint: 600,
+                          settings: {
+                            slidesToShow: 2,
+                          },
+                        },
+                      ]}
+                    >
+                      {service.frontmatter.images.map(image => (
+                        <Image onClick={this.handleShowGallery} key={image} image={image} />
+                      ))}
+                    </Slider>
                     <Divider />
-                    <SectionTitle>Bản đồ</SectionTitle>
+                    <SectionTitle location={location}>Bản đồ</SectionTitle>
+                    <Map />
+                    <Divider />
                   </Left>
                 </Col>
                 <Col sm={0} md={12} lg={4}>
-                  <Right />
+                  <Sticky topOffset={-110} stickyStyle={{ marginTop: 60 }}>
+                    <Right>
+                      <Price>{service.frontmatter.price}</Price>
+                      <ReactStars
+                        value={5}
+                        size={14}
+                        color2='#D4AF65'
+                        edit={false}
+                      />
+                      <Divider />
+                      <form>
+                        <Row>
+                          <Col sm={12} md={6}>
+                            <TextField
+                              label="Ngày đến"
+                              fullWidth
+                              type='date'
+                              margin="normal"
+                              variant="outlined"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              InputProps={{
+                                classes: {
+                                  root: classes.input,
+                                  input: classes.outline,
+                                },
+                              }}
+                            />
+                          </Col>
+                          <Col sm={12} md={6}>
+                            <TextField
+                              label="Ngày đi"
+                              fullWidth
+                              type='date'
+                              margin="normal"
+                              variant="outlined"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              InputProps={{
+                                classes: {
+                                  root: classes.input,
+                                  input: classes.outline,
+                                },
+                              }}
+                            />
+                          </Col>
+                        </Row>
+                        <TextField
+                          label="Số khách"
+                          fullWidth
+                          select
+                          margin="normal"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.input,
+                              input: classes.outline,
+                            },
+                          }}
+                        >
+                          <MenuItem value={1}>1</MenuItem>
+                          <MenuItem value={2}>2</MenuItem>
+                          <MenuItem value={3}>3</MenuItem>
+                          <MenuItem value={4}>4</MenuItem>
+                          <MenuItem value={5}>5</MenuItem>
+                        </TextField>
+                        <TextField
+                          label="Tên của bạn"
+                          fullWidth
+                          margin="normal"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.input,
+                              input: classes.outline,
+                            },
+                          }}
+                        />
+                        <TextField
+                          label="Số điện thoại"
+                          fullWidth
+                          margin="normal"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          InputProps={{
+                            classes: {
+                              root: classes.input,
+                              input: classes.outline,
+                            },
+                          }}
+                        />
+                        <Button
+                          size='large'
+                          fullWidth
+                          color='primary'
+                          variant='contained'
+                          classes={{
+                            root: classes.button,
+                          }}
+                        >
+                          Đặt Phòng Ngay
+                        </Button>
+                      </form>
+                    </Right>
+                  </Sticky>
                 </Col>
               </Row>
             </Grid>
+            <RelatedTitle>Dịch vụ tương tự</RelatedTitle>
           </Container>
         </Wrapper>
         <Footer />
-      </>
+      </MuiThemeProvider>
     );
   }
 }
 
-export default Layout;
+export default withStyles(styles)(Layout);
+
 export const query = graphql`
   query ($slug: String!) {
     service: markdownRemark(fields: { slug: { eq: $slug } }) {
@@ -262,6 +504,11 @@ export const query = graphql`
         sokhach
         sogiuong
         sophongtam
+        price
+        utilities {
+          icon
+          title
+        }
       }
     }
   }
