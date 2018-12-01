@@ -155,9 +155,10 @@ const NavItem = styled(Link)`
   }
 `;
 
-const ContactButton = styled.button`
+const ContactButton = styled(Link)`
   background: transparent;
   border: 1.5px solid white;
+  text-decoration: none;
   border-radius: 8px;
   margin-left: 25px;
   font-size: 16px;
