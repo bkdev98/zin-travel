@@ -21,6 +21,7 @@ const HeaderOverlay = styled.div`
   background-image: url(${props => props.image});
   background-position: center;
   background-repeat: no-repeat;
+  background-color: #D4AF65;
   background-size: cover;
   filter: brightness(.7);
   position: absolute;
@@ -109,6 +110,7 @@ export const pageQuery = graphql`
             createdAt
             images
             type
+            price
             address
           }
           fields {
@@ -129,6 +131,7 @@ export const pageQuery = graphql`
             title
             createdAt
             images
+            price
             type
             address
           }

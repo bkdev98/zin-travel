@@ -22,6 +22,7 @@ const HeaderOverlay = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: #D4AF65;
   filter: brightness(.7);
   position: absolute;
   width: 100%;
@@ -115,6 +116,7 @@ export const pageQuery = graphql`
             images
             type
             address
+            price
           }
           fields {
             slug
@@ -136,6 +138,7 @@ export const pageQuery = graphql`
             images
             type
             address
+            price
           }
           fields {
             slug

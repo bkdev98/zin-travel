@@ -198,6 +198,7 @@ export const pageQuery = graphql`
             title
             createdAt
             images
+            price
             type
             address
           }

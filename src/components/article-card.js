@@ -55,6 +55,7 @@ const Meta = styled.div`
 
 const Date = styled(Category)`
   color: #4A4A4A;
+  font-weight: 600;
   margin-right: 10px;
 `;
 

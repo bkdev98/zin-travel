@@ -29,7 +29,6 @@ const Category = styled.h5`
   text-transform: uppercase;
   font-size: 12px;
   margin: 8px 0px;
-  font-weight: 400;
   letter-spacing: 0.5px;
 `;
 
@@ -42,6 +41,7 @@ const Price = styled.p`
   color: #4A4A4A;
   font-size: 14px;
   margin-bottom: 5px;
+  font-weight: 600;
 `;
 
 const ServiceCard = ({ data, slug }) => (
