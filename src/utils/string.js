@@ -23,3 +23,16 @@ export const typeToUrl = (type) => {
       return type;
   }
 };
+
+export const typeToButtonText = (type) => {
+  switch (type) {
+    case 'hotel':
+      return 'Đặt Phòng Ngay';
+    case 'golf':
+      return 'Đặt Chỗ Ngay';
+    case 'restaurant':
+      return 'Đặt Chỗ Ngay';
+    default:
+      return type;
+  }
+};

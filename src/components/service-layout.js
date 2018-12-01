@@ -26,7 +26,7 @@ import Footer from './footer';
 import TruncateButton from './truncate-button';
 import Snackbar from './snackbar';
 import './layout.css';
-import { typeToText, typeToUrl } from '../utils/string';
+import { typeToText, typeToUrl, typeToButtonText } from '../utils/string';
 import { getUtilityIcon } from '../utils/icon';
 import SlideArrow from './slide-arrow';
 import Map from './map';
@@ -567,7 +567,7 @@ class Layout extends Component {
                           }}
                           onClick={this.handleSubmit}
                         >
-                          Đặt Phòng Ngay
+                          {typeToButtonText(service.frontmatter.type)}
                         </Button>
                       </form>
                     </Right>
