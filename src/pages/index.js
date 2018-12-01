@@ -129,11 +129,11 @@ const IndexPage = ({ data: { home, services } }) => (
           ))}
         </Row>
       </Grid>
-      <ShowAll to='/dich-vu'>Tất cả ưu đãi (100+)</ShowAll>
+      <ShowAll to='/dich-vu'>Tất cả ưu đãi</ShowAll>
     </Wrapper>
     <Wrapper>
       <Title>Tin tức mới nhất về du lịch</Title>
-      <ShowAll>Đọc thêm (20+)</ShowAll>
+      <ShowAll>Đọc thêm</ShowAll>
     </Wrapper>
   </Layout>
 );
@@ -167,6 +167,26 @@ export const pageQuery = graphql`
             images
             type
             address
+          }
+          fields {
+            slug
+          }
+        }
+      }
+    }
+    articles: allMarkdownRemark(
+      filter: { fileAbsolutePath: { regex: "/articles/" } }
+      sort: { fields: [frontmatter___createdAt], order: DESC }
+      limit: 3
+    ) {
+      edges {
+        node {
+          id
+          frontmatter {
+            title
+            createdAt
+            thumbnail
+            tags
           }
           fields {
             slug
