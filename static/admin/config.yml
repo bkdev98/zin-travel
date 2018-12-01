@@ -31,6 +31,7 @@ collections:
           - { name: email, label: Email liên hệ }
           - { name: managerEmail, label: Email nhận đặt phòng }
           - { name: facebookUrl, label: Địa chỉ Facebook, required: false }
+          - { name: contactBackground, label: Hình trang liên hệ, widget: image }
   - name: services
     label: Dịch vụ
     folder: static/services

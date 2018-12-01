@@ -71,6 +71,9 @@ const Action = styled.button`
   color: #4A4A4A;
   margin-left: 10px;
   font-weight: 600;
+  :hover {
+    background: #d8d8d8;
+  }
 `;
 
 const Footer = () => (
@@ -78,12 +81,12 @@ const Footer = () => (
     <Inner>
       <Grid fluid>
         <Row>
-          <Col sm={12} md={6} lg={3}>
+          <Col sm={6} md={6} lg={3}>
             <Link to='/'>
               <Logo />
             </Link>
           </Col>
-          <Col sm={12} md={6} lg={3}>
+          <Col sm={6} md={6} lg={3}>
             <ListHeader>Dịch vụ</ListHeader>
             <ul>
               <ListItem>
@@ -97,7 +100,7 @@ const Footer = () => (
               </ListItem>
             </ul>
           </Col>
-          <Col sm={12} md={6} lg={3}>
+          <Col sm={6} md={6} lg={3}>
             <ListHeader>Zin Travel</ListHeader>
             <ul>
               <ListItem>
@@ -111,7 +114,7 @@ const Footer = () => (
               </ListItem>
             </ul>
           </Col>
-          <Col sm={12} md={6} lg={3}>
+          <Col sm={6} md={6} lg={3}>
             <ListHeader>Liên Hệ</ListHeader>
             <ul>
               <ListItem>

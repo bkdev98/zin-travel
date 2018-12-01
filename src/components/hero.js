@@ -63,7 +63,7 @@ const SearchOption = styled(Select)`
   background: white;
   display: flex;
   padding-left: 10px;
-  width: 150px;
+  width: 170px;
   ::before, ::after {
     display: none;
   }
