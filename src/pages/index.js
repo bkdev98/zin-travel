@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import Layout from '../components/layout';
 import Hero from '../components/hero';
 import ServiceCard from '../components/service-card';
+import ArticleCard from '../components/article-card';
 
 const styles = theme => ({
   button: {
@@ -97,7 +98,7 @@ const ShowAll = styled(Link)`
   }
 `;
 
-const IndexPage = ({ data: { home, services } }) => (
+const IndexPage = ({ data: { home, services, articles } }) => (
   <Layout hideNavbar>
     <Hero title={home.edges[0].node.title} subTitle={home.edges[0].node.subTitle} />
     <Wrapper>
@@ -133,6 +134,38 @@ const IndexPage = ({ data: { home, services } }) => (
     </Wrapper>
     <Wrapper>
       <Title>Tin tức mới nhất về du lịch</Title>
+      <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <Row>
+          {articles && articles.edges[0] && (
+            <Col lg={6} md={4} sm={12}>
+              <ArticleCard
+                large
+                data={articles.edges[0].node.frontmatter}
+                slug={articles.edges[0].node.fields.slug}
+                excerpt={articles.edges[0].node.excerpt}
+              />
+            </Col>
+          )}
+          {articles && articles.edges[1] && (
+            <Col lg={3} md={4} sm={12}>
+              <ArticleCard
+                data={articles.edges[1].node.frontmatter}
+                slug={articles.edges[1].node.fields.slug}
+                excerpt={articles.edges[1].node.excerpt}
+              />
+            </Col>
+          )}
+          {articles && articles.edges[2] && (
+            <Col lg={3} md={4} sm={12}>
+              <ArticleCard
+                data={articles.edges[2].node.frontmatter}
+                slug={articles.edges[2].node.fields.slug}
+                excerpt={articles.edges[2].node.excerpt}
+              />
+            </Col>
+          )}
+        </Row>
+      </Grid>
       <ShowAll>Đọc thêm</ShowAll>
     </Wrapper>
   </Layout>
@@ -191,6 +224,7 @@ export const pageQuery = graphql`
           fields {
             slug
           }
+          excerpt(pruneLength: 200)
         }
       }
     }

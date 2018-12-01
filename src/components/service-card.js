@@ -29,11 +29,12 @@ const Category = styled.h5`
   text-transform: uppercase;
   font-size: 12px;
   margin: 8px 0px;
+  font-weight: 400;
   letter-spacing: 0.5px;
 `;
 
 const Title = styled.h3`
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 5px;
 `;
 
