@@ -28,6 +28,7 @@ import Snackbar from './snackbar';
 import './layout.css';
 import { typeToText, typeToUrl, typeToButtonText } from '../utils/string';
 import { getUtilityIcon } from '../utils/icon';
+import { newHotelRequest, newGolfRequest } from '../utils/mail';
 import SlideArrow from './slide-arrow';
 import Map from './map';
 import ServiceCard from './service-card';
@@ -269,6 +270,8 @@ class Layout extends Component {
     fields: {
       startDate: moment().format('YYYY-MM-DD'),
       endDate: moment().add(3, 'days').format('YYYY-MM-DD'),
+      date: moment().add(1, 'days').format('YYYY-MM-DD'),
+      time: moment().format('HH:mm'),
       customerCount: 2,
       customerName: '',
       customerPhone: '',
@@ -311,16 +314,66 @@ class Layout extends Component {
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
     const { fields } = this.state;
-    if (!fields.customerCount || fields.customerName || fields.customerPhone ||
-      !fields.customerCount.length || fields.customerName.length || fields.customerPhone.length) {
-      this.setState({
-        showSnackbar: true,
-        snackbarMessage: 'Cần điền đầy đủ thông tin',
-        isError: true,
-      });
+    const { data: { service, contact } } = this.props;
+    if (service.frontmatter.type === 'hotel') {
+      if (!fields.startDate || !fields.endDate || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
+        !fields.customerName.length || !fields.customerPhone.length) {
+        this.setState({
+          showSnackbar: true,
+          snackbarMessage: 'Cần điền đầy đủ thông tin',
+          isError: true,
+        });
+      } else {
+        try {
+          await newHotelRequest({
+            title: `Yêu cầu đặt phòng ${service.frontmatter.title}.`,
+            to_name: contact.edges[0].node.companyName,
+            contact_email: contact.edges[0].node.managerEmail,
+            ...fields,
+          });
+          this.setState({
+            showSnackbar: true,
+            snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
+          });
+        } catch (error) {
+          this.setState({
+            showSnackbar: true,
+            snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
+            isError: true,
+          });
+        }
+      }
+    } else if (service.frontmatter.type === 'restaurant' || service.frontmatter.type === 'golf') {
+      if (!fields.date || !fields.time || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
+        !fields.customerName.length || !fields.customerPhone.length) {
+        this.setState({
+          showSnackbar: true,
+          snackbarMessage: 'Cần điền đầy đủ thông tin',
+          isError: true,
+        });
+      } else {
+        try {
+          await newGolfRequest({
+            title: `Yêu cầu đặt ${service.frontmatter.title}.`,
+            to_name: contact.edges[0].node.companyName,
+            contact_email: contact.edges[0].node.managerEmail,
+            ...fields,
+          });
+          this.setState({
+            showSnackbar: true,
+            snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
+          });
+        } catch (error) {
+          this.setState({
+            showSnackbar: true,
+            snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
+            isError: true,
+          });
+        }
+      }
     }
   }
 
@@ -401,18 +454,22 @@ class Layout extends Component {
                       </ShowMore>
                     </Content>
                     <Divider />
-                    <SectionTitle>Tiện nghi</SectionTitle>
-                    <Utilities>
-                      <Row>
-                        {service.frontmatter.utilities.map(utility => (
-                          <Col key={utility.title} xs={12} sm={6}>
-                            <span>{getUtilityIcon(utility.icon)} {utility.title}</span>
-                          </Col>
-                        ))}
-                      </Row>
-                    </Utilities>
-                    <Divider />
-                    <SectionTitle>Hình ảnh phòng</SectionTitle>
+                    {service.frontmatter.utilities && (
+                      <>
+                        <SectionTitle>Tiện nghi</SectionTitle>
+                        <Utilities>
+                          <Row>
+                            {service.frontmatter.utilities.map(utility => (
+                              <Col key={utility.title} xs={12} sm={6}>
+                                <span>{getUtilityIcon(utility.icon)} {utility.title}</span>
+                              </Col>
+                            ))}
+                          </Row>
+                        </Utilities>
+                        <Divider />
+                      </>
+                    )}
+                    <SectionTitle>Hình ảnh</SectionTitle>
                     <Slider
                       slidesToShow={3}
                       infinite
@@ -457,48 +514,94 @@ class Layout extends Component {
                       />
                       <Divider />
                       <form onSubmit={this.handleSubmit}>
-                        <Row>
-                          <Col sm={12} md={6}>
-                            <TextField
-                              label="Ngày đến"
-                              fullWidth
-                              type='date'
-                              value={fields.startDate}
-                              onChange={e => this.handleChange(e.target.value, 'startDate')}
-                              margin="normal"
-                              variant="outlined"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              InputProps={{
-                                classes: {
-                                  root: classes.input,
-                                  input: classes.outline,
-                                },
-                              }}
-                            />
-                          </Col>
-                          <Col sm={12} md={6}>
-                            <TextField
-                              label="Ngày đi"
-                              fullWidth
-                              type='date'
-                              value={fields.endDate}
-                              onChange={e => this.handleChange(e.target.value, 'endDate')}
-                              margin="normal"
-                              variant="outlined"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              InputProps={{
-                                classes: {
-                                  root: classes.input,
-                                  input: classes.outline,
-                                },
-                              }}
-                            />
-                          </Col>
-                        </Row>
+                        {service.frontmatter.type === 'hotel' ? (
+                          <Row>
+                            <Col sm={12} md={6}>
+                              <TextField
+                                label="Ngày đến"
+                                fullWidth
+                                type='date'
+                                value={fields.startDate}
+                                onChange={e => this.handleChange(e.target.value, 'startDate')}
+                                margin="normal"
+                                variant="outlined"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                InputProps={{
+                                  classes: {
+                                    root: classes.input,
+                                    input: classes.outline,
+                                  },
+                                }}
+                              />
+                            </Col>
+                            <Col sm={12} md={6}>
+                              <TextField
+                                label="Ngày đi"
+                                fullWidth
+                                type='date'
+                                value={fields.endDate}
+                                onChange={e => this.handleChange(e.target.value, 'endDate')}
+                                margin="normal"
+                                variant="outlined"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                InputProps={{
+                                  classes: {
+                                    root: classes.input,
+                                    input: classes.outline,
+                                  },
+                                }}
+                              />
+                            </Col>
+                          </Row>
+                        ) : (
+                          <Row>
+                            <Col sm={12} md={6}>
+                              <TextField
+                                label="Ngày dùng"
+                                fullWidth
+                                type='date'
+                                value={fields.date}
+                                onChange={e => this.handleChange(e.target.value, 'date')}
+                                margin="normal"
+                                variant="outlined"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                InputProps={{
+                                  classes: {
+                                    root: classes.input,
+                                    input: classes.outline,
+                                  },
+                                }}
+                              />
+                            </Col>
+                            <Col sm={12} md={6}>
+                              <TextField
+                                label="Thời gian"
+                                fullWidth
+                                type='time'
+                                value={fields.time}
+                                onChange={e => this.handleChange(e.target.value, 'time')}
+                                margin="normal"
+                                variant="outlined"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                InputProps={{
+                                  step: 300,
+                                  classes: {
+                                    root: classes.input,
+                                    input: classes.outline,
+                                  },
+                                }}
+                              />
+                            </Col>
+                          </Row>
+                        )}
                         <TextField
                           label="Số khách"
                           fullWidth
@@ -599,6 +702,14 @@ export default withStyles(styles)(Layout);
 
 export const query = graphql`
   query GetServiceData ($slug: String!, $type: String!) {
+    contact: allPagesYaml(filter: { managerEmail: { ne: null } }) {
+      edges {
+        node {
+          managerEmail
+          companyName
+        }
+      }
+    }
     service: markdownRemark(fields: { slug: { eq: $slug } }) {
       html
       frontmatter {

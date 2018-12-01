@@ -8,6 +8,7 @@
     "@material-ui/icons": "^3.0.1",
     "axios": "^0.18.0",
     "babel-plugin-styled-components": "^1.8.0",
+    "emailjs-com": "^2.3.2",
     "gatsby": "^2.0.59",
     "gatsby-image": "^2.0.15",
     "gatsby-plugin-manifest": "^2.0.5",

@@ -3999,6 +3999,10 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+emailjs-com@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/emailjs-com/-/emailjs-com-2.3.2.tgz#5da57ff3c6a99b47193f5a1aeaebcb04d0188011"
+
 "emoji-regex@>=6.0.0 <=6.1.1":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-6.1.1.tgz#c6cd0ec1b0642e2a3c67a1137efc5e796da4f88e"
