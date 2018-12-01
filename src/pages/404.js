@@ -5,6 +5,9 @@ import Layout from '../components/layout';
 
 const Wrapper = styled.div`
   margin-top: 80px;
+  height: 60vh;
+  text-align: center;
+  padding-top: 30vh;
 `;
 
 const NotFoundPage = () => (
