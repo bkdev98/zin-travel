@@ -10,3 +10,16 @@ export const typeToText = (type) => {
       return type;
   }
 };
+
+export const typeToUrl = (type) => {
+  switch (type) {
+    case 'hotel':
+      return '/khach-san';
+    case 'golf':
+      return '/san-golf';
+    case 'restaurant':
+      return '/nha-hang';
+    default:
+      return type;
+  }
+};

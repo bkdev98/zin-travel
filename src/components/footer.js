@@ -87,13 +87,13 @@ const Footer = () => (
             <ListHeader>Dịch vụ</ListHeader>
             <ul>
               <ListItem>
-                <Link>Đặt phòng khách sạn</Link>
+                <Link to='/khach-san'>Đặt phòng khách sạn</Link>
               </ListItem>
               <ListItem>
-                <Link>Đặt phòng sân Golf</Link>
+                <Link to='/san-golf'>Đặt phòng sân Golf</Link>
               </ListItem>
               <ListItem>
-                <Link>Đặt phòng nhà hàng</Link>
+                <Link to='/nha-hang'>Đặt phòng nhà hàng</Link>
               </ListItem>
             </ul>
           </Col>

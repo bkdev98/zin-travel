@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { graphql, Link } from 'gatsby';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -39,25 +38,35 @@ const CategoryList = styled.div`
   display: flex;
 `;
 
-const Category = styled(Button)`
+const Category = styled(Link)`
   height: 140px;
   width: 286px;
+  position: relative;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background-image: url(${props => props.image});
-  background-position: center;
-  background-size: cover;
-  && {
-    text-transform: none;
-    margin-right: 20px;
+  text-decoration: none;
+  margin-right: 20px;
+  img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    border-radius: 6px;
+    left: 0;
+    filter: brightness(85%);
+    transition: all 0.4s ease;
+    :hover {
+      filter: brightness(120%);
+    }
   }
   p {
     font-size: 22px;
     margin: 0px;
+    z-index: 1;
     color: #FFFFFF;
   }
 `;
@@ -94,13 +103,16 @@ const IndexPage = ({ data: { home, services } }) => (
     <Wrapper>
       <Title>Dịch vụ dành cho bạn</Title>
       <CategoryList>
-        <Category image={home.edges[0].node.hotelImage}>
+        <Category to='/khach-san'>
+          <img src={home.edges[0].node.hotelImage} />
           <p>Khách Sạn</p>
         </Category>
-        <Category image={home.edges[0].node.golfImage}>
+        <Category to='/san-golf'>
+          <img src={home.edges[0].node.golfImage} />
           <p>Sân Golf</p>
         </Category>
-        <Category image={home.edges[0].node.restaurantImage}>
+        <Category to='/nha-hang'>
+          <img src={home.edges[0].node.restaurantImage} />
           <p>Nhà Hàng</p>
         </Category>
       </CategoryList>
@@ -117,7 +129,7 @@ const IndexPage = ({ data: { home, services } }) => (
           ))}
         </Row>
       </Grid>
-      <ShowAll>Tất cả ưu đãi (100+)</ShowAll>
+      <ShowAll to='/dich-vu'>Tất cả ưu đãi (100+)</ShowAll>
     </Wrapper>
     <Wrapper>
       <Title>Tin tức mới nhất về du lịch</Title>
@@ -142,8 +154,9 @@ export const pageQuery = graphql`
       }
     }
     services: allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/services/" } }
-      sort: { fields: [frontmatter___createdAt], order: ASC }
+      filter: { fileAbsolutePath: { regex: "/services/" }, frontmatter: { featured: { eq: true } } }
+      sort: { fields: [frontmatter___createdAt], order: DESC }
+      limit: 12
     ) {
       edges {
         node {

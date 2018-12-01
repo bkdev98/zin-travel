@@ -208,12 +208,12 @@ class Hero extends Component {
                 <NavItem>Tiếng Việt</NavItem>
               </TopContact>
               <NavItems>
-                <NavItem>Trang Chủ</NavItem>
-                <NavItem>Khách Sạn</NavItem>
-                <NavItem>Sân Golf</NavItem>
-                <NavItem>Nhà Hàng</NavItem>
-                <NavItem>Tin Tức</NavItem>
-                <ContactButton>Liên Hệ</ContactButton>
+                <NavItem to='/'>Trang Chủ</NavItem>
+                <NavItem to='/khach-san'>Khách Sạn</NavItem>
+                <NavItem to='/san-golf'>Sân Golf</NavItem>
+                <NavItem to='/nha-hang'>Nhà Hàng</NavItem>
+                <NavItem to='/tin-tuc'>Tin Tức</NavItem>
+                <ContactButton to='/lien-he'>Liên Hệ</ContactButton>
               </NavItems>
             </NavContainer>
           </NavInner>

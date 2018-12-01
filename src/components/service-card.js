@@ -48,7 +48,7 @@ const ServiceCard = ({ data, slug }) => (
     <Link to={`dich-vu${slug}`}>
       <FeaturedImage src={data.images[0]} alt={data.title} />
       <Category>
-        <span>{typeToText(data.type)} </span> • <span> Hồ Chí Minh</span>
+        <span>{typeToText(data.type)} </span> • <span> {`${data.address.slice(0, 20)}...`}</span>
       </Category>
       <Title>{data.title}</Title>
       <Price>{data.price}</Price>

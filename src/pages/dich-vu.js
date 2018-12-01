@@ -50,39 +50,34 @@ const Title = styled.h3`
   margin-bottom: 20px;
 `;
 
-const Empty = styled.p`
-  font-size: 16px;
-  margin-left: 40px;
-`;
-
-const SanGolfPage = ({ data: { home, featuredServices, allServices } }) => (
+const DichVuPage = ({ data: { home, featuredServices, allServices } }) => (
   <Layout>
     <Wrapper>
       <Header>
-        <HeaderOverlay image={home.edges[0].node.golfImage} />
-        <h3>Dịch vụ Sân Golf</h3>
+        <HeaderOverlay image={home.edges[0].node.hotelImage} />
+        <h3>Dịch vụ du lịch Zin Travel</h3>
       </Header>
       <Container>
         <Title>Dịch vụ nổi bật</Title>
         <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Row>
-            {featuredServices ? featuredServices.edges.map(({ node }) => (
+            {featuredServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
                 <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
               </Col>
-            )) : <Empty>Không tìm thấy dịch vụ!</Empty>}
+            ))}
           </Row>
         </Grid>
       </Container>
       <Container>
-        <Title>Đặt sân đánh Golf</Title>
+        <Title>Tất cả dịch vụ</Title>
         <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Row>
-            {allServices ? allServices.edges.map(({ node }) => (
+            {allServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
                 <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
               </Col>
-            )) : <Empty>Không tìm thấy dịch vụ!</Empty>}
+            ))}
           </Row>
         </Grid>
       </Container>
@@ -90,19 +85,19 @@ const SanGolfPage = ({ data: { home, featuredServices, allServices } }) => (
   </Layout>
 );
 
-export default SanGolfPage;
+export default DichVuPage;
 
 export const pageQuery = graphql`
-  query SanGolfQuery {
+  query DichVuQuery {
     home: allPagesYaml(filter: { title: { ne: null } }) {
       edges {
         node {
-          golfImage
+          hotelImage
         }
       }
     }
     featuredServices: allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/services/" }, frontmatter: { featured: { eq: true }, type: { eq: "golf" } } }
+      filter: { fileAbsolutePath: { regex: "/services/" }, frontmatter: { featured: { eq: true } } }
       sort: { fields: [frontmatter___createdAt], order: DESC }
       limit: 12
     ) {
@@ -123,7 +118,7 @@ export const pageQuery = graphql`
       }
     }
     allServices: allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/services/" }, frontmatter: { type: { eq: "golf" } } }
+      filter: { fileAbsolutePath: { regex: "/services/" } }
       sort: { fields: [frontmatter___createdAt], order: DESC }
       limit: 24
     ) {

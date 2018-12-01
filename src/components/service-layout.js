@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import styled from 'styled-components';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import ImageGallery from 'react-image-gallery';
@@ -18,15 +18,19 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import AnchorLink from 'react-anchor-link-smooth-scroll';
+import moment from 'moment';
 
 import Navbar from './navbar';
 import Footer from './footer';
 import TruncateButton from './truncate-button';
+import Snackbar from './snackbar';
 import './layout.css';
-import { typeToText } from '../utils/string';
+import { typeToText, typeToUrl } from '../utils/string';
 import { getUtilityIcon } from '../utils/icon';
 import SlideArrow from './slide-arrow';
 import Map from './map';
+import ServiceCard from './service-card';
 
 const styles = () => ({
   outline: {
@@ -150,6 +154,14 @@ const Information = styled.h5`
   text-transform: uppercase;
   margin-bottom: 10px;
   color: #4A4A4A;
+  a {
+    color: #4A4A4A;
+    text-decoration: none;
+    :hover {
+      color: #D4AF65;
+    }
+    transition: all 0.3s;
+  }
 `;
 
 const Meta = styled.div`
@@ -224,8 +236,47 @@ const Price = styled.h4`
   margin-bottom: 5px;
 `;
 
+const ShowAll = styled(Link)`
+  color: #D4AF65;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0px;
+  text-decoration: none;
+  position: relative;
+  ::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #D4AF65;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease-in-out;
+    transition-delay: 0.1s;
+  }
+  :hover::after {
+    transform: scaleX(1);
+    transition-delay: 0s;
+  }
+`;
+
 class Layout extends Component {
-  state = { showGallery: false, location: null }
+  state = {
+    showGallery: false,
+    location: null,
+    fields: {
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().add(3, 'days').format('YYYY-MM-DD'),
+      customerCount: 2,
+      customerName: '',
+      customerPhone: '',
+    },
+    showSnackbar: false,
+    snackbarMessage: '',
+    isError: false,
+  }
 
   componentDidMount = async () => {
     const encodedAddress = encodeURI(this.props.data.service.frontmatter.address);
@@ -240,6 +291,15 @@ class Layout extends Component {
     }
   }
 
+  handleChange = (value, field) => {
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        [field]: value,
+      },
+    });
+  }
+
   handleShowGallery = () => {
     this.imageGallery.fullScreen();
     this.setState({ showGallery: true });
@@ -251,9 +311,26 @@ class Layout extends Component {
     }
   }
 
+  handleSubmit = e => {
+    e.preventDefault();
+    const { fields } = this.state;
+    if (!fields.customerCount || fields.customerName || fields.customerPhone ||
+      !fields.customerCount.length || fields.customerName.length || fields.customerPhone.length) {
+      this.setState({
+        showSnackbar: true,
+        snackbarMessage: 'Cần điền đầy đủ thông tin',
+        isError: true,
+      });
+    }
+  }
+
+  handleCloseError = () => {
+    this.setState({ showSnackbar: false, snackbarMessage: '', isError: false });
+  }
+
   render() {
-    const { data: { service }, classes } = this.props;
-    const { showGallery, location } = this.state;
+    const { data: { service, relatedServices }, classes } = this.props;
+    const { showGallery, location, fields, showSnackbar, snackbarMessage, isError } = this.state;
     const imageData = service.frontmatter.images.map(image => ({ original: image, thumbnail: image, originalClass: 'gallery-img' }));
 
     return (
@@ -299,7 +376,13 @@ class Layout extends Component {
               <Row>
                 <Col md={12} lg={8}>
                   <Left>
-                    <Information>{typeToText(service.frontmatter.type)} • Hồ Chí Minh</Information>
+                    <Information>
+                      <Link to={typeToUrl(service.frontmatter.type)}>
+                        {typeToText(service.frontmatter.type)}
+                      </Link> • <AnchorLink href='#map'>
+                        {service.frontmatter.address}
+                      </AnchorLink>
+                    </Information>
                     <Title>{service.frontmatter.title}</Title>
                     <Meta>
                       {service.frontmatter.sokhach && (
@@ -357,7 +440,7 @@ class Layout extends Component {
                       ))}
                     </Slider>
                     <Divider />
-                    <SectionTitle location={location}>Bản đồ</SectionTitle>
+                    <SectionTitle id='map' location={location}>Bản đồ</SectionTitle>
                     <Map />
                     <Divider />
                   </Left>
@@ -373,13 +456,15 @@ class Layout extends Component {
                         edit={false}
                       />
                       <Divider />
-                      <form>
+                      <form onSubmit={this.handleSubmit}>
                         <Row>
                           <Col sm={12} md={6}>
                             <TextField
                               label="Ngày đến"
                               fullWidth
                               type='date'
+                              value={fields.startDate}
+                              onChange={e => this.handleChange(e.target.value, 'startDate')}
                               margin="normal"
                               variant="outlined"
                               InputLabelProps={{
@@ -398,6 +483,8 @@ class Layout extends Component {
                               label="Ngày đi"
                               fullWidth
                               type='date'
+                              value={fields.endDate}
+                              onChange={e => this.handleChange(e.target.value, 'endDate')}
                               margin="normal"
                               variant="outlined"
                               InputLabelProps={{
@@ -416,6 +503,8 @@ class Layout extends Component {
                           label="Số khách"
                           fullWidth
                           select
+                          value={fields.customerCount}
+                          onChange={e => this.handleChange(e.target.value, 'customerCount')}
                           margin="normal"
                           variant="outlined"
                           InputLabelProps={{
@@ -438,6 +527,8 @@ class Layout extends Component {
                           label="Tên của bạn"
                           fullWidth
                           margin="normal"
+                          value={fields.customerName}
+                          onChange={e => this.handleChange(e.target.value, 'customerName')}
                           variant="outlined"
                           InputLabelProps={{
                             shrink: true,
@@ -454,6 +545,8 @@ class Layout extends Component {
                           fullWidth
                           margin="normal"
                           variant="outlined"
+                          value={fields.customerPhone}
+                          onChange={e => this.handleChange(e.target.value, 'customerPhone')}
                           InputLabelProps={{
                             shrink: true,
                           }}
@@ -472,6 +565,7 @@ class Layout extends Component {
                           classes={{
                             root: classes.button,
                           }}
+                          onClick={this.handleSubmit}
                         >
                           Đặt Phòng Ngay
                         </Button>
@@ -482,9 +576,20 @@ class Layout extends Component {
               </Row>
             </Grid>
             <RelatedTitle>Dịch vụ tương tự</RelatedTitle>
+            <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+              <Row>
+                {relatedServices ? relatedServices.edges.map(({ node }) => (
+                  <Col lg={3} md={6} sm={12} key={node.id}>
+                    <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                  </Col>
+                )) : <span style={{ fontSize: 16 }}>Không tìm thấy dịch vụ liên quan</span>}
+              </Row>
+            </Grid>
+            {relatedServices && <ShowAll to={typeToUrl(service.frontmatter.type)}>Xem thêm gợi ý</ShowAll>}
           </Container>
         </Wrapper>
         <Footer />
+        <Snackbar isError={isError} open={showSnackbar} message={snackbarMessage} onClose={this.handleCloseError} />
       </MuiThemeProvider>
     );
   }
@@ -493,7 +598,7 @@ class Layout extends Component {
 export default withStyles(styles)(Layout);
 
 export const query = graphql`
-  query ($slug: String!) {
+  query GetServiceData ($slug: String!, $type: String!) {
     service: markdownRemark(fields: { slug: { eq: $slug } }) {
       html
       frontmatter {
@@ -502,12 +607,35 @@ export const query = graphql`
         images
         createdAt
         sokhach
+        address
         sogiuong
         sophongtam
         price
         utilities {
           icon
           title
+        }
+      }
+    }
+    relatedServices: allMarkdownRemark(
+      filter: { frontmatter: { type: { eq: $type } }, fields: { slug: { ne: $slug } } }
+      sort: { fields: [frontmatter___createdAt], order: DESC }
+      limit: 4
+    ) {
+      edges {
+        node {
+          id
+          frontmatter {
+            title
+            type
+            images
+            createdAt
+            address
+            price
+          }
+          fields {
+            slug
+          }
         }
       }
     }

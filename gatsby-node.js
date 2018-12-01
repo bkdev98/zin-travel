@@ -22,6 +22,9 @@ exports.createPages = ({ graphql, actions }) => {
         services: allMarkdownRemark(filter: { fileAbsolutePath: { regex: "/services/" } }) {
           edges {
             node {
+              frontmatter {
+                type
+              }
               fields {
                 slug
               }
@@ -45,6 +48,7 @@ exports.createPages = ({ graphql, actions }) => {
           component: path.resolve('./src/components/service-layout.js'),
           context: {
             slug: node.fields.slug,
+            type: node.frontmatter.type,
           },
         });
       });
