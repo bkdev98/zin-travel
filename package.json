@@ -43,6 +43,7 @@
     "react-spring": "^6.1.10",
     "react-stars": "^2.2.5",
     "react-sticky-el": "^1.0.20",
+    "recompose": "^0.30.0",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",

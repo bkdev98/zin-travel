@@ -93,7 +93,7 @@ module.exports = {
         apiKey: 'fc0438887ca2209be744aa9be251983b',
         indexName: 'dev_SERVICES',
         queries,
-        chunkSize: 10000, // default: 1000
+        chunkSize: 10000,
       },
     },
     'gatsby-plugin-netlify-cms',

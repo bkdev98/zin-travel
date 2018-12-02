@@ -287,6 +287,7 @@ class Layout extends Component {
     const encodedAddress = encodeURI(this.props.data.service.frontmatter.address);
     const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=AIzaSyAGjf9PEag69kVcGkWpDzGo0kUQgM4aiAE`);
     if (result && result.results) {
+      console.log(result.results[0]);
       this.setState({
         location: {
           lat: result.results[0].geometry.location.lat,
@@ -528,7 +529,7 @@ class Layout extends Component {
                     </Slider>
                     <Divider />
                     <SectionTitle id='map' location={location}>Bản đồ</SectionTitle>
-                    <Map />
+                    <Map address={service.frontmatter.address} />
                     <Divider />
                   </Left>
                 </Col>

@@ -1,30 +1,47 @@
 import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { compose, withProps } from 'recompose';
 
-const MyMapComponent = withScriptjs(withGoogleMap(({ location, ...props }) =>
-  (<GoogleMap
-    defaultZoom={15}
-    defaultCenter={{ lat: location.lat, lng: location.lng }}
-    {...props}
-  >
-    {props.isMarkerShown && <Marker position={{ lat: location.lat, lng: location.lng }} />}
-  </GoogleMap>)
-));
+class MapComponent extends Component {
+  state = { lat: 10.8471758, lng: 106.6447029 }
 
-class Map extends Component {
+  componentDidMount = () => {
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ address: this.props.address }, (results, status) => {
+      if (status === 'OK') {
+        this.setState({
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng(),
+        });
+      } else {
+        console.log('Geocode was not successful for the following reason:', status);
+      }
+    });
+  }
+
   render() {
-    const { location = { lat: 10.8471758, lng: 106.6447029 } } = this.props;
+    const { lat, lng } = this.state;
+
     return (
-      <MyMapComponent
-        isMarkerShown
-        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGjf9PEag69kVcGkWpDzGo0kUQgM4aiAE&callback=initMap"
-        loadingElement={<div style={{ height: '100%' }} />}
-        containerElement={<div style={{ height: '400px' }} />}
-        mapElement={<div style={{ height: '100%' }} />}
-        location={location}
-      />
+      <GoogleMap
+        defaultZoom={15}
+        defaultCenter={{ lat, lng }}
+        center={{ lat, lng }}
+      >
+        {this.props.isMarkerShown && <Marker position={{ lat, lng }} />}
+      </GoogleMap>
     );
   }
 }
 
-export default Map;
+export default compose(
+  withProps({
+    isMarkerShown: true,
+    googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAGjf9PEag69kVcGkWpDzGo0kUQgM4aiAE',
+    loadingElement: (<div style={{ height: '100%' }} />),
+    containerElement: (<div style={{ height: '400px' }} />),
+    mapElement: (<div style={{ height: '100%' }} />),
+  }),
+  withScriptjs,
+  withGoogleMap)(MapComponent);
+

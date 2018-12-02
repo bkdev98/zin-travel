@@ -157,7 +157,7 @@ class LienHePage extends Component {
       <MuiThemeProvider theme={theme}>
         <Layout>
           <Wrapper>
-            <Map />
+            <Map address={info.edges[0].node.address} />
             <Container>
               <Inner>
                 <Grid fluid style={{ padding: 0 }}>
