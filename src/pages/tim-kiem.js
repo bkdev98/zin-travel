@@ -57,7 +57,10 @@ class TimKiemPage extends Component {
               indexName='dev_SERVICES'
             >
               <Title>Kết quả tìm kiếm</Title>
-              <SearchBox defaultRefinement={searchText} translations={{ placeholder: 'Địa chỉ, khách sạn, thành phố' }} />
+              <SearchBox
+                defaultRefinement={searchText}
+                translations={{ placeholder: 'Địa chỉ, khách sạn, thành phố' }}
+              />
               <RefinementList
                 attribute='frontmatter.type'
                 defaultRefinement={[searchType]}

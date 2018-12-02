@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import { graphql, Link } from 'gatsby';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { connect } from 'react-redux';
 
 import Layout from '../components/layout';
 import Hero from '../components/hero';
@@ -98,7 +99,7 @@ const ShowAll = styled(Link)`
   }
 `;
 
-const IndexPage = ({ data: { home, services, articles } }) => (
+const IndexPage = ({ data: { home, services, articles }, savedServices }) => (
   <Layout hideNavbar>
     <Hero title={home.edges[0].node.title} subTitle={home.edges[0].node.subTitle} />
     <Wrapper>
@@ -132,6 +133,18 @@ const IndexPage = ({ data: { home, services, articles } }) => (
       </Grid>
       <ShowAll to='/dich-vu'>Tất cả ưu đãi</ShowAll>
     </Wrapper>
+    {savedServices.length && <Wrapper>
+      <Title>Dịch vụ bạn đã lưu</Title>
+      <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <Row>
+          {savedServices.map(item => (
+            <Col lg={3} md={6} sm={12} key={item.id}>
+              <ServiceCard data={item.frontmatter} slug={item.fields.slug} />
+            </Col>
+          ))}
+        </Row>
+      </Grid>
+    </Wrapper>}
     <Wrapper>
       <Title>Tin tức mới nhất về du lịch</Title>
       <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -171,7 +184,9 @@ const IndexPage = ({ data: { home, services, articles } }) => (
   </Layout>
 );
 
-export default withStyles(styles)(IndexPage);
+export default connect(state => ({
+  savedServices: state.services.saved,
+}))(withStyles(styles)(IndexPage));
 
 export const pageQuery = graphql`
   query IndexQuery {

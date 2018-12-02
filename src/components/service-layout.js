@@ -20,6 +20,7 @@ import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/
 import MenuItem from '@material-ui/core/MenuItem';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
 import Navbar from './navbar';
 import Footer from './footer';
@@ -32,6 +33,7 @@ import { newHotelRequest, newGolfRequest } from '../utils/mail';
 import SlideArrow from './slide-arrow';
 import Map from './map';
 import ServiceCard from './service-card';
+import { saveService, unsaveService } from '../actions';
 
 const styles = () => ({
   outline: {
@@ -390,10 +392,29 @@ class Layout extends Component {
     window.open(`http://www.facebook.com/sharer.php?u=${url}&title=${title}&description=${descr}&picture=${image}`);
   }
 
+  handleToggleSave = isSaved => {
+    const { data: { service }, saveService, unsaveService } = this.props; // eslint-disable-line
+    delete service.html;
+    if (!isSaved) {
+      saveService(service);
+      this.setState({
+        showSnackbar: true,
+        snackbarMessage: 'Đã lưu dịch vụ này',
+      });
+    } else {
+      unsaveService(service);
+      this.setState({
+        showSnackbar: true,
+        snackbarMessage: 'Huỷ lưu dịch vụ thành công',
+      });
+    }
+  }
+
   render() {
-    const { data: { service, relatedServices }, classes } = this.props;
+    const { data: { service, relatedServices }, classes, savedServices } = this.props;
     const { showGallery, location, fields, showSnackbar, snackbarMessage, isError } = this.state;
     const imageData = service.frontmatter.images.map(image => ({ original: image, thumbnail: image, originalClass: 'gallery-img' }));
+    const isSaved = savedServices.findIndex(item => item.id === service.id) >= 0;
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -423,9 +444,9 @@ class Layout extends Component {
                   <IoMdShare />
                   Chia sẻ
                 </ActionButton>
-                <ActionButton>
+                <ActionButton onClick={() => this.handleToggleSave(isSaved)}>
                   <IoIosBookmark />
-                  Lưu lại
+                  {isSaved ? 'Huỷ lưu' : 'Lưu lại'}
                 </ActionButton>
               </TopActions>
               <BottomActions>
@@ -707,7 +728,12 @@ class Layout extends Component {
   }
 }
 
-export default withStyles(styles)(Layout);
+export default connect(state => ({
+  savedServices: state.services.saved,
+}), {
+  saveService,
+  unsaveService,
+})(withStyles(styles)(Layout));
 
 export const query = graphql`
   query GetServiceData ($slug: String!, $type: String!) {
@@ -721,6 +747,7 @@ export const query = graphql`
     }
     service: markdownRemark(fields: { slug: { eq: $slug } }) {
       html
+      id
       frontmatter {
         title
         type

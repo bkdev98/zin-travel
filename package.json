@@ -37,11 +37,15 @@
     "react-instantsearch-dom": "^5.3.2",
     "react-jss": "^8.6.1",
     "react-markdown": "^4.0.4",
+    "react-redux": "^5.1.1",
     "react-show-more": "^2.0.0",
     "react-slick": "^0.23.2",
     "react-spring": "^6.1.10",
     "react-stars": "^2.2.5",
     "react-sticky-el": "^1.0.20",
+    "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.0.2"
   },
@@ -58,7 +62,8 @@
   "devDependencies": {
     "eslint": "^5.7.0",
     "eslint-config-equimper": "^2.2.2",
-    "prettier": "^1.14.2"
+    "prettier": "^1.14.2",
+    "redux-devtools-extension": "^2.13.7"
   },
   "repository": {
     "type": "git",

@@ -4,6 +4,7 @@ const React = require('react');
 const { renderToString } = require('react-dom/server');
 const JssProvider = require('react-jss/lib/JssProvider').default;
 const getPageContext = require('./src/getPageContext').default;
+const wrapWithProvider = require('./src/wrapWithProvider').default;
 
 function replaceRenderer({ bodyComponent, replaceBodyHTMLString, setHeadComponents }) {
   // Get the context of the page to collected side effects.
@@ -25,6 +26,7 @@ function replaceRenderer({ bodyComponent, replaceBodyHTMLString, setHeadComponen
 }
 
 exports.replaceRenderer = replaceRenderer;
+exports.wrapRootElement = wrapWithProvider;
 
 // It's not ready yet: https://github.com/gatsbyjs/gatsby/issues/8237.
 //
