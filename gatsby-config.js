@@ -1,3 +1,39 @@
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`,
+});
+
+// gatsby-config.js
+const myQuery = `{
+  allMarkdownRemark(
+    filter: { fileAbsolutePath: { regex: "/services/" } }
+  ) {
+    edges {
+      node {
+        id
+        frontmatter {
+          title
+          createdAt
+          images
+          price
+          type
+          address
+        }
+        fields {
+          slug
+        }
+      }
+    }
+  }
+}`;
+
+const queries = [
+  {
+    query: myQuery,
+    transformer: ({ data }) => data.allMarkdownRemark.edges.map(({ node }) => node), // optional
+    // indexName: 'index name to target', // overrides main index name, optional
+  },
+];
+
 module.exports = {
   siteMetadata: {
     title: 'Zin Travel | Dịch vụ du lịch của bạn',
@@ -48,6 +84,16 @@ module.exports = {
       options: {
         name: 'services',
         path: `${__dirname}/static/services`,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-algolia',
+      options: {
+        appId: process.env.ALGOLIA_APP_ID,
+        apiKey: process.env.ALGOLIA_API_KEY,
+        indexName: process.env.ALGOLIA_INDEX_NAME,
+        queries,
+        chunkSize: 10000, // default: 1000
       },
     },
     'gatsby-plugin-netlify-cms',

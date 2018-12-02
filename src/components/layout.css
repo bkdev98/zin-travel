@@ -627,3 +627,40 @@ pre tt:after {
 .gallery-img {
   height: 90vh;
 }
+.ais-SearchBox-input {
+  line-height: 50px;
+  color: #4A4A4A !important;
+  padding: 0px 45px !important;
+}
+.ais-Hits-item {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0px !important;
+}
+.ais-Hits, .ais-RefinementList {
+  margin-top: 20px;
+}
+.ais-SearchBox-submit {
+  left: 15px !important;
+}
+.ais-SearchBox-submitIcon, .ais-SearchBox-resetIcon {
+  width: 16px !important;
+  height: 16px !important;
+}
+.ais-SearchBox-reset {
+  right: 15px !important;
+}
+.ais-RefinementList-checkbox {
+  margin-right: 5px;
+  width: 17px;
+  height: 17px;
+}
+.ais-RefinementList-item {
+  display: inline-block;
+  margin-right: 30px;
+}
+.ais-RefinementList-count {
+  margin-left: 5px;
+  /* color: white !important;
+  background-color: #D4AF65 !important; */
+}

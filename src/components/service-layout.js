@@ -381,6 +381,15 @@ class Layout extends Component {
     this.setState({ showSnackbar: false, snackbarMessage: '', isError: false });
   }
 
+  handleShareToFb = () => {
+    const { data: { service } } = this.props;
+    const title = service.frontmatter.title;
+    const descr = service.excerpt;
+    const image = `https://zintravel.innoteq.site${service.frontmatter.images[0]}`;
+    const url = `https://zintravel.innoteq.site/dich-vu${service.fields.slug}`;
+    window.open(`http://www.facebook.com/sharer.php?u=${url}&title=${title}&description=${descr}&picture=${image}`);
+  }
+
   render() {
     const { data: { service, relatedServices }, classes } = this.props;
     const { showGallery, location, fields, showSnackbar, snackbarMessage, isError } = this.state;
@@ -410,7 +419,7 @@ class Layout extends Component {
             />
             <ActionButtonWrapper>
               <TopActions>
-                <ActionButton style={{ marginRight: 10 }}>
+                <ActionButton style={{ marginRight: 10 }} onClick={this.handleShareToFb}>
                   <IoMdShare />
                   Chia sẻ
                 </ActionButton>
@@ -726,6 +735,10 @@ export const query = graphql`
           icon
           title
         }
+      }
+      excerpt(pruneLength: 80)
+      fields {
+        slug
       }
     }
     relatedServices: allMarkdownRemark(

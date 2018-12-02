@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { StaticQuery, graphql, Link } from 'gatsby';
+import { StaticQuery, graphql, Link, navigate } from 'gatsby';
 import Img from 'gatsby-image';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
@@ -50,7 +50,7 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-const SearchForm = styled.div`
+const SearchForm = styled.form`
   display: flex;
 `;
 
@@ -79,7 +79,7 @@ const SearchOption = styled(Select)`
 
 const SearchInput = styled.input`
   margin-left: 5px;
-  min-width: 370px;
+  min-width: 360px;
   padding-left: 20px;
 `;
 
@@ -188,15 +188,21 @@ const BGImage = () => (
 );
 
 class Hero extends Component {
-  state = { searchType: 'hotel' }
+  state = { searchText: '', searchType: 'hotel' }
 
   handleChangeType = event => {
     this.setState({ searchType: event.target.value });
   }
 
+  handleSearch = e => {
+    e.preventDefault();
+    const { searchText, searchType } = this.state;
+    navigate('/tim-kiem', { state: { searchText, searchType } });
+  }
+
   render() {
     const { title, subTitle } = this.props;
-    const { searchType } = this.state;
+    const { searchText, searchType } = this.state;
     return (
       <Wrapper>
         <HeroNavigation>
@@ -221,14 +227,19 @@ class Hero extends Component {
         </HeroNavigation>
         <SubTitle>{subTitle}</SubTitle>
         <Title>{title}</Title>
-        <SearchForm>
+        <SearchForm onSubmit={this.handleSearch}>
           <SearchOption value={searchType} onChange={this.handleChangeType}>
             <MenuItem value='hotel'>Tìm Phòng</MenuItem>
             <MenuItem value='golf'>Tìm Sân Golf</MenuItem>
             <MenuItem value='restaurant'>Tìm Nhà Hàng</MenuItem>
           </SearchOption>
-          <SearchInput autoFocus placeholder='Địa chỉ, khách sạn, thành phố' />
-          <SearchButton>
+          <SearchInput
+            value={searchText}
+            onChange={e => this.setState({ searchText: e.target.value })}
+            autoFocus
+            placeholder='Địa chỉ, khách sạn, thành phố'
+          />
+          <SearchButton onClick={this.handleSearch}>
             <SearchIcon />
           </SearchButton>
         </SearchForm>
