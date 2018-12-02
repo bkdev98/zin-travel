@@ -89,9 +89,9 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-algolia',
       options: {
-        appId: process.env.ALGOLIA_APP_ID,
-        apiKey: process.env.ALGOLIA_API_KEY,
-        indexName: process.env.ALGOLIA_INDEX_NAME,
+        appId: '821C6FSL9S',
+        apiKey: 'fc0438887ca2209be744aa9be251983b',
+        indexName: 'dev_SERVICES',
         queries,
         chunkSize: 10000, // default: 1000
       },
