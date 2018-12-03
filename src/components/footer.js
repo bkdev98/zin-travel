@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import { Link } from 'gatsby';
+import { FormattedMessage } from 'react-intl';
+import { StaticQuery, graphql } from 'gatsby';
 
 import logo from '../images/logo-black.png';
+import Link from './link';
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -77,66 +79,91 @@ const Action = styled.button`
 `;
 
 const Footer = () => (
-  <Wrapper>
-    <Inner>
-      <Grid fluid>
-        <Row>
-          <Col sm={6} md={6} lg={3}>
-            <Link to='/'>
-              <Logo />
-            </Link>
-          </Col>
-          <Col sm={6} md={6} lg={3}>
-            <ListHeader>Dịch vụ</ListHeader>
-            <ul>
-              <ListItem>
-                <Link to='/khach-san'>Đặt phòng khách sạn</Link>
-              </ListItem>
-              <ListItem>
-                <Link to='/san-golf'>Đặt phòng sân Golf</Link>
-              </ListItem>
-              <ListItem>
-                <Link to='/nha-hang'>Đặt phòng nhà hàng</Link>
-              </ListItem>
-            </ul>
-          </Col>
-          <Col sm={6} md={6} lg={3}>
-            <ListHeader>Zin Travel</ListHeader>
-            <ul>
-              <ListItem>
-                <Link>Điều khoản sử dụng</Link>
-              </ListItem>
-              <ListItem>
-                <Link>Chính sách bảo mật</Link>
-              </ListItem>
-              <ListItem>
-                <Link>Site Map</Link>
-              </ListItem>
-            </ul>
-          </Col>
-          <Col sm={6} md={6} lg={3}>
-            <ListHeader>Liên Hệ</ListHeader>
-            <ul>
-              <ListItem>
-                <Link>Facebook</Link>
-              </ListItem>
-              <ListItem>
-                <Link>Email</Link>
-              </ListItem>
-            </ul>
-          </Col>
-        </Row>
-      </Grid>
-      <Divider />
-      <Bottom>
-        <p>© Bản quyền thuộc về <strong>Zin Travel CO.,LTD</strong></p>
-        <Actions>
-          <Action>Tiếng Việt</Action>
-          <Action>VNĐ</Action>
-        </Actions>
-      </Bottom>
-    </Inner>
-  </Wrapper>
+  <StaticQuery
+    query={graphql`
+      query FooterQuery {
+        contact: allPagesYaml(filter: { companyName: { ne: null } }) {
+          edges {
+            node {
+              companyName
+            }
+          }
+        }
+      }
+    `}
+    render={({ contact }) => (
+      <Wrapper>
+        <Inner>
+          <Grid fluid>
+            <Row>
+              <Col sm={6} md={6} lg={3}>
+                <Link to='/'>
+                  <Logo />
+                </Link>
+              </Col>
+              <Col sm={6} md={6} lg={3}>
+                <ListHeader>
+                  <FormattedMessage id='footer.service' />
+                </ListHeader>
+                <ul>
+                  <ListItem>
+                    <Link to='/khach-san'>
+                      <FormattedMessage id='footer.hotelService' />
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link to='/san-golf'>
+                      <FormattedMessage id='footer.golfService' />
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link to='/nha-hang'>
+                      <FormattedMessage id='footer.restaurantService' />
+                    </Link>
+                  </ListItem>
+                </ul>
+              </Col>
+              <Col sm={6} md={6} lg={3}>
+                <ListHeader>Zin Travel</ListHeader>
+                <ul>
+                  <ListItem>
+                    <Link to='/'>Điều khoản sử dụng</Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link to='/'>Chính sách bảo mật</Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link to='/'>Site Map</Link>
+                  </ListItem>
+                </ul>
+              </Col>
+              <Col sm={6} md={6} lg={3}>
+                <ListHeader>
+                  <FormattedMessage id='footer.contact' />
+                </ListHeader>
+                <ul>
+                  <ListItem>
+                    <Link to='/'>Facebook</Link>
+                  </ListItem>
+                  <ListItem>
+                    <Link to='/'>Email</Link>
+                  </ListItem>
+                </ul>
+              </Col>
+            </Row>
+          </Grid>
+          <Divider />
+          <Bottom>
+            <p><FormattedMessage id='footer.copyright' /> <strong>{contact.edges[0].node.companyName}</strong></p>
+            <Actions>
+              <Action>Tiếng Việt</Action>
+              <Action>VNĐ</Action>
+            </Actions>
+          </Bottom>
+        </Inner>
+      </Wrapper>
+    )}
+  />
 );
 
 export default Footer;

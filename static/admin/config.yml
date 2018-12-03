@@ -16,8 +16,6 @@ collections:
         label: Trang chủ
         file: static/pages/home.yml
         fields:
-          - { name: title, label: Tiêu đề }
-          - { name: subTitle, label: Tiêu đề phụ }
           - { name: hotelImage, label: Hình danh mục khách sạn, widget: image }
           - { name: golfImage, label: Hình danh mục sân golf, widget: image }
           - { name: restaurantImage, label: Hình danh mục nhà hàng, widget: image }

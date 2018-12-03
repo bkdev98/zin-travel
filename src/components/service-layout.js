@@ -21,6 +21,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { IntlProvider, addLocaleData, injectIntl } from 'react-intl';
+import enData from 'react-intl/locale-data/en';
+import viData from 'react-intl/locale-data/vi';
+import { compose } from 'recompose';
 
 import Navbar from './navbar';
 import Footer from './footer';
@@ -34,6 +38,13 @@ import SlideArrow from './slide-arrow';
 import Map from './map';
 import ServiceCard from './service-card';
 import { saveService, unsaveService } from '../actions';
+
+import en from '../locale/en.json';
+import vi from '../locale/vi.json';
+
+const messages = { en, vi };
+
+addLocaleData([...enData, ...viData]);
 
 const styles = () => ({
   outline: {
@@ -265,6 +276,20 @@ const ShowAll = styled(Link)`
   }
 `;
 
+const MyHelmet = ({ intl, locale }) => (
+  <Helmet
+    title={intl.formatMessage({ id: 'site.title' })}
+    meta={[
+      { name: 'description', content: intl.formatMessage({ id: 'site.description' }) },
+      { name: 'keywords', content: 'du lịch, zin travel, traveling, hotel, restaurant' },
+    ]}
+  >
+    <html lang={locale} />
+  </Helmet>
+);
+
+const InjectedHelmet = compose(injectIntl)(MyHelmet);
+
 class Layout extends Component {
   state = {
     showGallery: false,
@@ -412,319 +437,313 @@ class Layout extends Component {
   }
 
   render() {
-    const { data: { service, relatedServices }, classes, savedServices } = this.props;
+    const { data: { service, relatedServices }, classes, savedServices, pageContext: { locale } } = this.props;
     const { showGallery, location, fields, showSnackbar, snackbarMessage, isError } = this.state;
     const imageData = service.frontmatter.images.map(image => ({ original: image, thumbnail: image, originalClass: 'gallery-img' }));
     const isSaved = savedServices.findIndex(item => item.id === service.id) >= 0;
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Helmet
-          title={service.frontmatter.title}
-          meta={[
-            { name: 'description', content: 'Zin Travel' },
-            { name: 'keywords', content: 'du lịch, zin travel' },
-          ]}
-        >
-          <html lang="en" />
-        </Helmet>
-        <Navbar />
-        <Wrapper>
-          <ImageWrapper>
-            <Featured image={service.frontmatter.images[0]} />
-            <ImageGallery
-              items={imageData}
-                ref={i => this.imageGallery = i} // eslint-disable-line
-              onScreenChange={this.handleHideGallery}
-              useBrowserFullscreen={false}
-              additionalClass={showGallery ? null : 'no-display'}
-            />
-            <ActionButtonWrapper>
-              <TopActions>
-                <ActionButton style={{ marginRight: 10 }} onClick={this.handleShareToFb}>
-                  <IoMdShare />
-                  Chia sẻ
-                </ActionButton>
-                <ActionButton onClick={() => this.handleToggleSave(isSaved)}>
-                  <IoIosBookmark />
-                  {isSaved ? 'Huỷ lưu' : 'Lưu lại'}
-                </ActionButton>
-              </TopActions>
-              <BottomActions>
-                <ActionButton onClick={this.handleShowGallery}>Xem ảnh</ActionButton>
-              </BottomActions>
-            </ActionButtonWrapper>
-          </ImageWrapper>
-          <Container>
-            <Grid fluid style={{ padding: 0 }}>
-              <Row>
-                <Col md={12} lg={8}>
-                  <Left>
-                    <Information>
-                      <Link to={typeToUrl(service.frontmatter.type)}>
-                        {typeToText(service.frontmatter.type)}
-                      </Link> • <AnchorLink href='#map'>
-                        {service.frontmatter.address}
-                      </AnchorLink>
-                    </Information>
-                    <Title>{service.frontmatter.title}</Title>
-                    <Meta>
-                      {service.frontmatter.sokhach && (
-                        <div><MdPeople />{service.frontmatter.sokhach} khách</div>
-                      )}
-                      {service.frontmatter.sogiuong && (
-                        <div><MdHotel />{service.frontmatter.sogiuong} giường</div>
-                      )}
-                      {service.frontmatter.sophongtam && (
-                        <div><MdHotTub />{service.frontmatter.sophongtam} phòng tắm</div>
-                      )}
-                    </Meta>
-                    <Content>
-                      <ShowMore lines={4} more={<TruncateButton isMore />} less={<TruncateButton />}>
-                        <div dangerouslySetInnerHTML={{ __html: service.html }} />
-                      </ShowMore>
-                    </Content>
-                    <Divider />
-                    {service.frontmatter.utilities && (
-                      <>
-                        <SectionTitle>Tiện nghi</SectionTitle>
-                        <Utilities>
-                          <Row>
-                            {service.frontmatter.utilities.map(utility => (
-                              <Col key={utility.title} xs={12} sm={6}>
-                                <span>{getUtilityIcon(utility.icon)} {utility.title}</span>
-                              </Col>
-                            ))}
-                          </Row>
-                        </Utilities>
-                        <Divider />
-                      </>
-                    )}
-                    <SectionTitle>Hình ảnh</SectionTitle>
-                    <Slider
-                      slidesToShow={3}
-                      infinite
-                      autoplay
-                      dots={false}
-                      nextArrow={<SlideArrow type='next' />}
-                      prevArrow={<SlideArrow type='prev' />}
-                      responsive={[
-                        {
-                          breakpoint: 1024,
-                          settings: {
-                            slidesToShow: 3,
-                          },
-                        },
-                        {
-                          breakpoint: 600,
-                          settings: {
-                            slidesToShow: 2,
-                          },
-                        },
-                      ]}
-                    >
-                      {service.frontmatter.images.map(image => (
-                        <Image onClick={this.handleShowGallery} key={image} image={image} />
-                      ))}
-                    </Slider>
-                    <Divider />
-                    <SectionTitle id='map' location={location}>Bản đồ</SectionTitle>
-                    <Map address={service.frontmatter.address} />
-                    <Divider />
-                  </Left>
-                </Col>
-                <Col sm={0} md={12} lg={4}>
-                  <Sticky topOffset={-110} stickyStyle={{ marginTop: 60 }}>
-                    <Right>
-                      <Price>{service.frontmatter.price}</Price>
-                      <ReactStars
-                        value={5}
-                        size={14}
-                        color2='#D4AF65'
-                        edit={false}
-                      />
-                      <Divider />
-                      <form onSubmit={this.handleSubmit}>
-                        {service.frontmatter.type === 'hotel' ? (
-                          <Row>
-                            <Col sm={12} md={6}>
-                              <TextField
-                                label="Ngày đến"
-                                fullWidth
-                                type='date'
-                                value={fields.startDate}
-                                onChange={e => this.handleChange(e.target.value, 'startDate')}
-                                margin="normal"
-                                variant="outlined"
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                InputProps={{
-                                  classes: {
-                                    root: classes.input,
-                                    input: classes.outline,
-                                  },
-                                }}
-                              />
-                            </Col>
-                            <Col sm={12} md={6}>
-                              <TextField
-                                label="Ngày đi"
-                                fullWidth
-                                type='date'
-                                value={fields.endDate}
-                                onChange={e => this.handleChange(e.target.value, 'endDate')}
-                                margin="normal"
-                                variant="outlined"
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                InputProps={{
-                                  classes: {
-                                    root: classes.input,
-                                    input: classes.outline,
-                                  },
-                                }}
-                              />
-                            </Col>
-                          </Row>
-                        ) : (
-                          <Row>
-                            <Col sm={12} md={6}>
-                              <TextField
-                                label="Ngày dùng"
-                                fullWidth
-                                type='date'
-                                value={fields.date}
-                                onChange={e => this.handleChange(e.target.value, 'date')}
-                                margin="normal"
-                                variant="outlined"
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                InputProps={{
-                                  classes: {
-                                    root: classes.input,
-                                    input: classes.outline,
-                                  },
-                                }}
-                              />
-                            </Col>
-                            <Col sm={12} md={6}>
-                              <TextField
-                                label="Thời gian"
-                                fullWidth
-                                type='time'
-                                value={fields.time}
-                                onChange={e => this.handleChange(e.target.value, 'time')}
-                                margin="normal"
-                                variant="outlined"
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                InputProps={{
-                                  step: 300,
-                                  classes: {
-                                    root: classes.input,
-                                    input: classes.outline,
-                                  },
-                                }}
-                              />
-                            </Col>
-                          </Row>
+      <IntlProvider locale={locale} messages={messages[locale]}>
+        <MuiThemeProvider theme={theme}>
+          <InjectedHelmet locale={locale} />
+          <Navbar />
+          <Wrapper>
+            <ImageWrapper>
+              <Featured image={service.frontmatter.images[0]} />
+              <ImageGallery
+                items={imageData}
+                  ref={i => this.imageGallery = i} // eslint-disable-line
+                onScreenChange={this.handleHideGallery}
+                useBrowserFullscreen={false}
+                additionalClass={showGallery ? null : 'no-display'}
+              />
+              <ActionButtonWrapper>
+                <TopActions>
+                  <ActionButton style={{ marginRight: 10 }} onClick={this.handleShareToFb}>
+                    <IoMdShare />
+                    Chia sẻ
+                  </ActionButton>
+                  <ActionButton onClick={() => this.handleToggleSave(isSaved)}>
+                    <IoIosBookmark />
+                    {isSaved ? 'Huỷ lưu' : 'Lưu lại'}
+                  </ActionButton>
+                </TopActions>
+                <BottomActions>
+                  <ActionButton onClick={this.handleShowGallery}>Xem ảnh</ActionButton>
+                </BottomActions>
+              </ActionButtonWrapper>
+            </ImageWrapper>
+            <Container>
+              <Grid fluid style={{ padding: 0 }}>
+                <Row>
+                  <Col md={12} lg={8}>
+                    <Left>
+                      <Information>
+                        <Link to={typeToUrl(service.frontmatter.type)}>
+                          {typeToText(service.frontmatter.type)}
+                        </Link> • <AnchorLink href='#map'>
+                          {service.frontmatter.address}
+                        </AnchorLink>
+                      </Information>
+                      <Title>{service.frontmatter.title}</Title>
+                      <Meta>
+                        {service.frontmatter.sokhach && (
+                          <div><MdPeople />{service.frontmatter.sokhach} khách</div>
                         )}
-                        <TextField
-                          label="Số khách"
-                          fullWidth
-                          select
-                          value={fields.customerCount}
-                          onChange={e => this.handleChange(e.target.value, 'customerCount')}
-                          margin="normal"
-                          variant="outlined"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          InputProps={{
-                            classes: {
-                              root: classes.input,
-                              input: classes.outline,
+                        {service.frontmatter.sogiuong && (
+                          <div><MdHotel />{service.frontmatter.sogiuong} giường</div>
+                        )}
+                        {service.frontmatter.sophongtam && (
+                          <div><MdHotTub />{service.frontmatter.sophongtam} phòng tắm</div>
+                        )}
+                      </Meta>
+                      <Content>
+                        <ShowMore lines={4} more={<TruncateButton isMore />} less={<TruncateButton />}>
+                          <div dangerouslySetInnerHTML={{ __html: service.html }} />
+                        </ShowMore>
+                      </Content>
+                      <Divider />
+                      {service.frontmatter.utilities && (
+                        <>
+                          <SectionTitle>Tiện nghi</SectionTitle>
+                          <Utilities>
+                            <Row>
+                              {service.frontmatter.utilities.map(utility => (
+                                <Col key={utility.title} xs={12} sm={6}>
+                                  <span>{getUtilityIcon(utility.icon)} {utility.title}</span>
+                                </Col>
+                              ))}
+                            </Row>
+                          </Utilities>
+                          <Divider />
+                        </>
+                      )}
+                      <SectionTitle>Hình ảnh</SectionTitle>
+                      <Slider
+                        slidesToShow={3}
+                        infinite
+                        autoplay
+                        dots={false}
+                        nextArrow={<SlideArrow type='next' />}
+                        prevArrow={<SlideArrow type='prev' />}
+                        responsive={[
+                          {
+                            breakpoint: 1024,
+                            settings: {
+                              slidesToShow: 3,
                             },
-                          }}
-                        >
-                          <MenuItem value={1}>1</MenuItem>
-                          <MenuItem value={2}>2</MenuItem>
-                          <MenuItem value={3}>3</MenuItem>
-                          <MenuItem value={4}>4</MenuItem>
-                          <MenuItem value={5}>5</MenuItem>
-                        </TextField>
-                        <TextField
-                          label="Tên của bạn"
-                          fullWidth
-                          margin="normal"
-                          value={fields.customerName}
-                          onChange={e => this.handleChange(e.target.value, 'customerName')}
-                          variant="outlined"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          InputProps={{
-                            classes: {
-                              root: classes.input,
-                              input: classes.outline,
+                          },
+                          {
+                            breakpoint: 600,
+                            settings: {
+                              slidesToShow: 2,
                             },
-                          }}
-                        />
-                        <TextField
-                          label="Số điện thoại"
-                          fullWidth
-                          margin="normal"
-                          variant="outlined"
-                          value={fields.customerPhone}
-                          onChange={e => this.handleChange(e.target.value, 'customerPhone')}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          InputProps={{
-                            classes: {
-                              root: classes.input,
-                              input: classes.outline,
-                            },
-                          }}
-                        />
-                        <Button
-                          size='large'
-                          fullWidth
-                          color='primary'
-                          variant='contained'
-                          classes={{
-                            root: classes.button,
-                          }}
-                          onClick={this.handleSubmit}
-                        >
-                          {typeToButtonText(service.frontmatter.type)}
-                        </Button>
-                      </form>
-                    </Right>
-                  </Sticky>
-                </Col>
-              </Row>
-            </Grid>
-            <RelatedTitle>Dịch vụ tương tự</RelatedTitle>
-            <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
-              <Row>
-                {relatedServices ? relatedServices.edges.map(({ node }) => (
-                  <Col lg={3} md={6} sm={12} key={node.id}>
-                    <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                          },
+                        ]}
+                      >
+                        {service.frontmatter.images.map(image => (
+                          <Image onClick={this.handleShowGallery} key={image} image={image} />
+                        ))}
+                      </Slider>
+                      <Divider />
+                      <SectionTitle id='map' location={location}>Bản đồ</SectionTitle>
+                      <Map address={service.frontmatter.address} />
+                      <Divider />
+                    </Left>
                   </Col>
-                )) : <span style={{ fontSize: 16 }}>Không tìm thấy dịch vụ liên quan</span>}
-              </Row>
-            </Grid>
-            {relatedServices && <ShowAll to={typeToUrl(service.frontmatter.type)}>Xem thêm gợi ý</ShowAll>}
-          </Container>
-        </Wrapper>
-        <Footer />
-        <Snackbar isError={isError} open={showSnackbar} message={snackbarMessage} onClose={this.handleCloseError} />
-      </MuiThemeProvider>
+                  <Col sm={0} md={12} lg={4}>
+                    <Sticky topOffset={-110} stickyStyle={{ marginTop: 60 }}>
+                      <Right>
+                        <Price>{service.frontmatter.price}</Price>
+                        <ReactStars
+                          value={5}
+                          size={14}
+                          color2='#D4AF65'
+                          edit={false}
+                        />
+                        <Divider />
+                        <form onSubmit={this.handleSubmit}>
+                          {service.frontmatter.type === 'hotel' ? (
+                            <Row>
+                              <Col sm={12} md={6}>
+                                <TextField
+                                  label="Ngày đến"
+                                  fullWidth
+                                  type='date'
+                                  value={fields.startDate}
+                                  onChange={e => this.handleChange(e.target.value, 'startDate')}
+                                  margin="normal"
+                                  variant="outlined"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  InputProps={{
+                                    classes: {
+                                      root: classes.input,
+                                      input: classes.outline,
+                                    },
+                                  }}
+                                />
+                              </Col>
+                              <Col sm={12} md={6}>
+                                <TextField
+                                  label="Ngày đi"
+                                  fullWidth
+                                  type='date'
+                                  value={fields.endDate}
+                                  onChange={e => this.handleChange(e.target.value, 'endDate')}
+                                  margin="normal"
+                                  variant="outlined"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  InputProps={{
+                                    classes: {
+                                      root: classes.input,
+                                      input: classes.outline,
+                                    },
+                                  }}
+                                />
+                              </Col>
+                            </Row>
+                          ) : (
+                            <Row>
+                              <Col sm={12} md={6}>
+                                <TextField
+                                  label="Ngày dùng"
+                                  fullWidth
+                                  type='date'
+                                  value={fields.date}
+                                  onChange={e => this.handleChange(e.target.value, 'date')}
+                                  margin="normal"
+                                  variant="outlined"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  InputProps={{
+                                    classes: {
+                                      root: classes.input,
+                                      input: classes.outline,
+                                    },
+                                  }}
+                                />
+                              </Col>
+                              <Col sm={12} md={6}>
+                                <TextField
+                                  label="Thời gian"
+                                  fullWidth
+                                  type='time'
+                                  value={fields.time}
+                                  onChange={e => this.handleChange(e.target.value, 'time')}
+                                  margin="normal"
+                                  variant="outlined"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  InputProps={{
+                                    step: 300,
+                                    classes: {
+                                      root: classes.input,
+                                      input: classes.outline,
+                                    },
+                                  }}
+                                />
+                              </Col>
+                            </Row>
+                          )}
+                          <TextField
+                            label="Số khách"
+                            fullWidth
+                            select
+                            value={fields.customerCount}
+                            onChange={e => this.handleChange(e.target.value, 'customerCount')}
+                            margin="normal"
+                            variant="outlined"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            InputProps={{
+                              classes: {
+                                root: classes.input,
+                                input: classes.outline,
+                              },
+                            }}
+                          >
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                            <MenuItem value={4}>4</MenuItem>
+                            <MenuItem value={5}>5</MenuItem>
+                          </TextField>
+                          <TextField
+                            label="Tên của bạn"
+                            fullWidth
+                            margin="normal"
+                            value={fields.customerName}
+                            onChange={e => this.handleChange(e.target.value, 'customerName')}
+                            variant="outlined"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            InputProps={{
+                              classes: {
+                                root: classes.input,
+                                input: classes.outline,
+                              },
+                            }}
+                          />
+                          <TextField
+                            label="Số điện thoại"
+                            fullWidth
+                            margin="normal"
+                            variant="outlined"
+                            value={fields.customerPhone}
+                            onChange={e => this.handleChange(e.target.value, 'customerPhone')}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            InputProps={{
+                              classes: {
+                                root: classes.input,
+                                input: classes.outline,
+                              },
+                            }}
+                          />
+                          <Button
+                            size='large'
+                            fullWidth
+                            color='primary'
+                            variant='contained'
+                            classes={{
+                              root: classes.button,
+                            }}
+                            onClick={this.handleSubmit}
+                          >
+                            {typeToButtonText(service.frontmatter.type)}
+                          </Button>
+                        </form>
+                      </Right>
+                    </Sticky>
+                  </Col>
+                </Row>
+              </Grid>
+              <RelatedTitle>Dịch vụ tương tự</RelatedTitle>
+              <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
+                <Row>
+                  {relatedServices ? relatedServices.edges.map(({ node }) => (
+                    <Col lg={3} md={6} sm={12} key={node.id}>
+                      <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                    </Col>
+                  )) : <span style={{ fontSize: 16 }}>Không tìm thấy dịch vụ liên quan</span>}
+                </Row>
+              </Grid>
+              {relatedServices && <ShowAll to={typeToUrl(service.frontmatter.type)}>Xem thêm gợi ý</ShowAll>}
+            </Container>
+          </Wrapper>
+          <Footer />
+          <Snackbar isError={isError} open={showSnackbar} message={snackbarMessage} onClose={this.handleCloseError} />
+        </MuiThemeProvider>
+      </IntlProvider>
     );
   }
 }

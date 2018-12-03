@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Spring } from 'react-spring';
-import { Link } from 'gatsby';
 import { Location } from '@reach/router';
+import { FormattedMessage } from 'react-intl';
 
 import { throttle } from '../utils/math';
 import { media } from '../utils/media';
 import MobileMenu from './mobile-menu';
+import Link from './link';
 import logo from '../images/logo.png';
 
 const HEADER_HEIGHT = 65;
@@ -321,42 +322,54 @@ class Navbar extends Component {
                   <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={300}>
                     {styles => (
                       <NavListItem style={styles}>
-                        <NavListItemLink active={location.pathname === '/'} to='/'>Trang Chủ</NavListItemLink>
+                        <NavListItemLink active={location.pathname === '/'} to='/'>
+                          <FormattedMessage id='nav.home' />
+                        </NavListItemLink>
                       </NavListItem>
                     )}
                   </Spring>
                   <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={400}>
                     {styles => (
                       <NavListItem style={styles}>
-                        <NavListItemLink active={location.pathname.includes('/khach-san')} to='/khach-san'>Khách Sạn</NavListItemLink>
+                        <NavListItemLink active={location.pathname.includes('/khach-san')} to='/khach-san'>
+                          <FormattedMessage id='nav.hotel' />
+                        </NavListItemLink>
                       </NavListItem>
                     )}
                   </Spring>
                   <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={500}>
                     {styles => (
                       <NavListItem style={styles}>
-                        <NavListItemLink active={location.pathname.includes('/san-golf')} to='/san-golf'>Sân Golf</NavListItemLink>
+                        <NavListItemLink active={location.pathname.includes('/san-golf')} to='/san-golf'>
+                          <FormattedMessage id='nav.golf' />
+                        </NavListItemLink>
                       </NavListItem>
                     )}
                   </Spring>
                   <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={600}>
                     {styles => (
                       <NavListItem style={styles}>
-                        <NavListItemLink active={location.pathname.includes('/nha-hang')} to='/nha-hang'>Nhà Hàng</NavListItemLink>
+                        <NavListItemLink active={location.pathname.includes('/nha-hang')} to='/nha-hang'>
+                          <FormattedMessage id='nav.restaurant' />
+                        </NavListItemLink>
                       </NavListItem>
                     )}
                   </Spring>
                   <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={700}>
                     {styles => (
                       <NavListItem style={styles}>
-                        <NavListItemLink active={location.pathname.includes('/tin-tuc')} to='/tin-tuc'>Tin Tức</NavListItemLink>
+                        <NavListItemLink active={location.pathname.includes('/tin-tuc')} to='/tin-tuc'>
+                          <FormattedMessage id='nav.news' />
+                        </NavListItemLink>
                       </NavListItem>
                     )}
                   </Spring>
                   <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={800}>
                     {styles => (
                       <NavListItem style={{ ...styles, marginRight: 0, paddingRight: 0 }}>
-                        <ContactButton active={location.pathname === '/lien-he'} to='/lien-he'>Liên Hệ</ContactButton>
+                        <ContactButton active={location.pathname === '/lien-he'} to='/lien-he'>
+                          <FormattedMessage id='nav.contact' />
+                        </ContactButton>
                       </NavListItem>
                     )}
                   </Spring>

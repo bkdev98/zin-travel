@@ -150,12 +150,12 @@ class LienHePage extends Component {
   }
 
   render() {
-    const { data: { info }, classes } = this.props;
+    const { data: { info }, classes, pageContext: { locale } } = this.props;
     const { fields } = this.state;
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Layout>
+        <Layout locale={locale}>
           <Wrapper>
             <Map address={info.edges[0].node.address} />
             <Container>

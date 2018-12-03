@@ -56,8 +56,8 @@ const Empty = styled.p`
   margin-left: 40px;
 `;
 
-const NhaHangPage = ({ data: { home, featuredServices, allServices } }) => (
-  <Layout>
+const NhaHangPage = ({ data: { home, featuredServices, allServices }, pageContext: { locale } }) => (
+  <Layout locale={locale}>
     <Wrapper>
       <Header>
         <HeaderOverlay image={home.edges[0].node.restaurantImage} />

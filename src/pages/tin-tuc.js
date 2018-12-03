@@ -68,8 +68,8 @@ const FeaturedDate = styled(FeaturedCategory)`
   font-weight: 600;
 `;
 
-const TinTucPage = ({ data: { articles } }) => (
-  <Layout>
+const TinTucPage = ({ data: { articles }, pageContext: { locale } }) => (
+  <Layout locale={locale}>
     <Wrapper>
       <Container>
         <Title>Tin tức mới nhất về du lịch</Title>

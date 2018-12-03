@@ -1,4 +1,5 @@
 const { createFilePath } = require('gatsby-source-filesystem');
+const locales = require('./src/locale/locales');
 
 const path = require('path');
 
@@ -43,25 +44,61 @@ exports.createPages = ({ graphql, actions }) => {
       }
     `).then(result => {
       result.data.services.edges.forEach(({ node }) => {
-        createPage({
-          path: `dich-vu${node.fields.slug}`,
-          component: path.resolve('./src/components/service-layout.js'),
-          context: {
-            slug: node.fields.slug,
-            type: node.frontmatter.type,
-          },
+        Object.keys(locales).map(lang => {
+          const localizedPath = locales[lang].default
+            ? `dich-vu${node.fields.slug}`
+            : `${locales[lang].path}/dich-vu${node.fields.slug}`;
+          return createPage({
+            path: localizedPath,
+            component: path.resolve('./src/components/service-layout.js'),
+            context: {
+              slug: node.fields.slug,
+              type: node.frontmatter.type,
+              locale: lang,
+            },
+          });
         });
       });
       result.data.articles.edges.forEach(({ node }) => {
-        createPage({
-          path: `tin-tuc${node.fields.slug}`,
-          component: path.resolve('./src/components/article-layout.js'),
-          context: {
-            slug: node.fields.slug,
-          },
+        Object.keys(locales).map(lang => {
+          const localizedPath = locales[lang].default
+            ? `tin-tuc${node.fields.slug}`
+            : `${locales[lang].path}/dich-vu${node.fields.slug}`;
+          return createPage({
+            path: localizedPath,
+            component: path.resolve('./src/components/article-layout.js'),
+            context: {
+              slug: node.fields.slug,
+              locale: lang,
+            },
+          });
         });
       });
       resolve();
     });
+  });
+};
+
+exports.onCreatePage = ({ page, actions }) => {
+  const { createPage, deletePage } = actions;
+
+  return new Promise(resolve => {
+    deletePage(page);
+
+    Object.keys(locales).map(lang => {
+      const localizedPath = locales[lang].default
+        ? page.path
+        : locales[lang].path + page.path;
+
+      return createPage({
+        ...page,
+        path: localizedPath,
+        context: {
+          locale: lang,
+        },
+      });
+    });
+
+    resolve();
   });
 };

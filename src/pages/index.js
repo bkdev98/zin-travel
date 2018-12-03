@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { graphql, Link } from 'gatsby';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 import Layout from '../components/layout';
 import Hero from '../components/hero';
@@ -65,7 +66,7 @@ const Category = styled(Link)`
       filter: brightness(120%);
     }
   }
-  p {
+  span {
     font-size: 22px;
     margin: 0px;
     z-index: 1;
@@ -99,29 +100,35 @@ const ShowAll = styled(Link)`
   }
 `;
 
-const IndexPage = ({ data: { home, services, articles }, savedServices }) => (
-  <Layout hideNavbar>
-    <Hero title={home.edges[0].node.title} subTitle={home.edges[0].node.subTitle} />
+const IndexPage = ({ data: { home, services, articles }, savedServices, pageContext: { locale } }) => (
+  <Layout locale={locale} hideNavbar>
+    <Hero />
     <Wrapper>
-      <Title>Dịch vụ dành cho bạn</Title>
+      <Title>
+        <FormattedMessage id='home.servicesForYou' />
+      </Title>
       <CategoryList>
         <Category to='/khach-san'>
           <img src={home.edges[0].node.hotelImage} />
-          <p>Khách Sạn</p>
+          <FormattedMessage id='type.hotel' />
         </Category>
         <Category to='/san-golf'>
           <img src={home.edges[0].node.golfImage} />
-          <p>Sân Golf</p>
+          <FormattedMessage id='type.golf' />
         </Category>
         <Category to='/nha-hang'>
           <img src={home.edges[0].node.restaurantImage} />
-          <p>Nhà Hàng</p>
+          <FormattedMessage id='type.restaurant' />
         </Category>
       </CategoryList>
     </Wrapper>
     <Wrapper>
-      <Title>Ưu đãi từ Zin Travel</Title>
-      <SubTitle>Những dịch vụ nóng hổi gần bạn nhất</SubTitle>
+      <Title>
+        <FormattedMessage id='home.fromZinTravel' />
+      </Title>
+      <SubTitle>
+        <FormattedMessage id='home.fromZinTravelSub' />
+      </SubTitle>
       <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Row>
           {services.edges.map(({ node }) => (
@@ -131,10 +138,14 @@ const IndexPage = ({ data: { home, services, articles }, savedServices }) => (
           ))}
         </Row>
       </Grid>
-      <ShowAll to='/dich-vu'>Tất cả ưu đãi</ShowAll>
+      <ShowAll to='/dich-vu'>
+        <FormattedMessage id='home.allServices' />
+      </ShowAll>
     </Wrapper>
     {savedServices.length && <Wrapper>
-      <Title>Dịch vụ bạn đã lưu</Title>
+      <Title>
+        <FormattedMessage id='home.savedServices' />
+      </Title>
       <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Row>
           {savedServices.map(item => (
@@ -146,7 +157,9 @@ const IndexPage = ({ data: { home, services, articles }, savedServices }) => (
       </Grid>
     </Wrapper>}
     <Wrapper>
-      <Title>Tin tức mới nhất về du lịch</Title>
+      <Title>
+        <FormattedMessage id='home.newsTitle' />
+      </Title>
       <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Row>
           {articles && articles.edges[0] && (
@@ -179,7 +192,9 @@ const IndexPage = ({ data: { home, services, articles }, savedServices }) => (
           )}
         </Row>
       </Grid>
-      <ShowAll>Đọc thêm</ShowAll>
+      <ShowAll to='/tin-tuc'>
+        <FormattedMessage id='home.readmore' />
+      </ShowAll>
     </Wrapper>
   </Layout>
 );
@@ -193,8 +208,6 @@ export const pageQuery = graphql`
     home: allPagesYaml(filter: { title: { ne: null } }) {
       edges {
         node {
-          title
-          subTitle
           golfImage
           hotelImage
           restaurantImage

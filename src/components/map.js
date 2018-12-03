@@ -44,4 +44,3 @@ export default compose(
   }),
   withScriptjs,
   withGoogleMap)(MapComponent);
-

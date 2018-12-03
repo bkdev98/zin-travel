@@ -46,9 +46,10 @@ class TimKiemPage extends Component {
 
   render() {
     const { searchText, searchType } = this.state;
+    const { pageContext: { locale } } = this.props;
 
     return (
-      <Layout>
+      <Layout locale={locale}>
         <Wrapper>
           <Container>
             <InstantSearch

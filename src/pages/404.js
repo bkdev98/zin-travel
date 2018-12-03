@@ -10,8 +10,8 @@ const Wrapper = styled.div`
   padding-top: 30vh;
 `;
 
-const NotFoundPage = () => (
-  <Layout>
+const NotFoundPage = ({ pageContext: { locale } }) => (
+  <Layout locale={locale}>
     <Wrapper>
       <h1>NOT FOUND</h1>
       <p>You just hit a route that doesn&#39;t exist... the sadness.</p>

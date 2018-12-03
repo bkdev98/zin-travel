@@ -51,8 +51,8 @@ const Title = styled.h3`
   margin-bottom: 20px;
 `;
 
-const DichVuPage = ({ data: { home, featuredServices, allServices } }) => (
-  <Layout>
+const DichVuPage = ({ data: { home, featuredServices, allServices }, pageContext: { locale } }) => (
+  <Layout locale={locale}>
     <Wrapper>
       <Header>
         <HeaderOverlay image={home.edges[0].node.hotelImage} />

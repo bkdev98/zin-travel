@@ -4,11 +4,22 @@ import { graphql, Link } from 'gatsby';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { IntlProvider, addLocaleData, injectIntl } from 'react-intl';
+import enData from 'react-intl/locale-data/en';
+import viData from 'react-intl/locale-data/vi';
+import { compose } from 'recompose';
 
 import Navbar from './navbar';
 import Footer from './footer';
 import './layout.css';
 import ArticleCard from './article-card';
+
+import en from '../locale/en.json';
+import vi from '../locale/vi.json';
+
+const messages = { en, vi };
+
+addLocaleData([...enData, ...viData]);
 
 const Wrapper = styled.div`
   margin-top: 80px;
@@ -100,47 +111,55 @@ const ShowAll = styled(Link)`
   }
 `;
 
-const ArticleLayout = ({ data: { article, relatedArticles } }) => (
-  <>
-    <Helmet
-      title={article.frontmatter.title}
-      meta={[
-        { name: 'description', content: 'Zin Travel' },
-        { name: 'keywords', content: 'du lịch, zin travel' },
-      ]}
-    >
-      <html lang="en" />
-    </Helmet>
-    <Navbar />
-    <Wrapper>
-      <Container>
-        <Category>
-          <span>{article.frontmatter.tags.join(', ')}</span>
-        </Category>
-        <Title>{article.frontmatter.title}</Title>
-        <Date>Ngày đăng: {moment(article.frontmatter.createdAt).calendar()}</Date>
-        <FeaturedImage src={article.frontmatter.thumbnail} alt={article.frontmatter.title} />
-        <Content dangerouslySetInnerHTML={{ __html: article.html }} />
-        <RelatedTitle>Những tin liên quan</RelatedTitle>
-        <Grid fluid style={{ padding: 0 }}>
-          <Row>
-            {relatedArticles ? relatedArticles.edges.map(({ node }) => (
-              <Col md={3} sm={12} key={node.id}>
-                <ArticleCard
-                  small
-                  data={node.frontmatter}
-                  slug={node.fields.slug}
-                  excerpt={node.excerpt}
-                />
-              </Col>
-            )) : <Empty>Không có bài viết liên quan</Empty>}
-          </Row>
-        </Grid>
-        <ShowAll to='/tin-tuc'>Xem tất cả</ShowAll>
-      </Container>
-    </Wrapper>
-    <Footer />
-  </>
+const MyHelmet = ({ intl, locale }) => (
+  <Helmet
+    title={intl.formatMessage({ id: 'site.title' })}
+    meta={[
+      { name: 'description', content: intl.formatMessage({ id: 'site.description' }) },
+      { name: 'keywords', content: 'du lịch, zin travel, traveling, hotel, restaurant' },
+    ]}
+  >
+    <html lang={locale} />
+  </Helmet>
+);
+
+const InjectedHelmet = compose(injectIntl)(MyHelmet);
+
+const ArticleLayout = ({ data: { article, relatedArticles }, pageContext: { locale } }) => (
+  <IntlProvider locale={locale} messages={messages[locale]}>
+    <>
+      <InjectedHelmet locale={locale} />
+      <Navbar />
+      <Wrapper>
+        <Container>
+          <Category>
+            <span>{article.frontmatter.tags.join(', ')}</span>
+          </Category>
+          <Title>{article.frontmatter.title}</Title>
+          <Date>Ngày đăng: {moment(article.frontmatter.createdAt).calendar()}</Date>
+          <FeaturedImage src={article.frontmatter.thumbnail} alt={article.frontmatter.title} />
+          <Content dangerouslySetInnerHTML={{ __html: article.html }} />
+          <RelatedTitle>Những tin liên quan</RelatedTitle>
+          <Grid fluid style={{ padding: 0 }}>
+            <Row>
+              {relatedArticles ? relatedArticles.edges.map(({ node }) => (
+                <Col md={3} sm={12} key={node.id}>
+                  <ArticleCard
+                    small
+                    data={node.frontmatter}
+                    slug={node.fields.slug}
+                    excerpt={node.excerpt}
+                  />
+                </Col>
+              )) : <Empty>Không có bài viết liên quan</Empty>}
+            </Row>
+          </Grid>
+          <ShowAll to='/tin-tuc'>Xem tất cả</ShowAll>
+        </Container>
+      </Wrapper>
+      <Footer />
+    </>
+  </IntlProvider>
 );
 
 export default ArticleLayout;

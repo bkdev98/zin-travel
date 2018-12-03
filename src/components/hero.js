@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { StaticQuery, graphql, Link, navigate } from 'gatsby';
+import { StaticQuery, graphql, navigate } from 'gatsby';
 import Img from 'gatsby-image';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import SearchIcon from '@material-ui/icons/Search';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import logo from '../images/logo-white.png';
+import Link from './link';
 
 const Wrapper = styled.div`
   height: 80vh;
@@ -170,23 +172,6 @@ const ContactButton = styled(Link)`
   }
 `;
 
-const BGImage = () => (
-  <StaticQuery
-    query={graphql`
-      query {
-        placeholderImage: file(relativePath: { eq: "hero-image.png" }) {
-          childImageSharp {
-            fluid(maxWidth: 3000) {
-              ...GatsbyImageSharpFluid
-            }
-          }
-        }
-      }
-    `}
-    render={data => <StyledImg fluid={data.placeholderImage.childImageSharp.fluid} />}
-  />
-);
-
 class Hero extends Component {
   state = { searchText: '', searchType: 'hotel' }
 
@@ -201,52 +186,99 @@ class Hero extends Component {
   }
 
   render() {
-    const { title, subTitle } = this.props;
     const { searchText, searchType } = this.state;
+    const { intl } = this.props;
     return (
-      <Wrapper>
-        <HeroNavigation>
-          <NavInner>
-            <Logo src={logo} />
-            <NavContainer>
-              <TopContact>
-                <NavItem>lienhe@zintravel.vn</NavItem>
-                <NavItem>0917 679 524</NavItem>
-                <NavItem>Tiếng Việt</NavItem>
-              </TopContact>
-              <NavItems>
-                <NavItem to='/'>Trang Chủ</NavItem>
-                <NavItem to='/khach-san'>Khách Sạn</NavItem>
-                <NavItem to='/san-golf'>Sân Golf</NavItem>
-                <NavItem to='/nha-hang'>Nhà Hàng</NavItem>
-                <NavItem to='/tin-tuc'>Tin Tức</NavItem>
-                <ContactButton to='/lien-he'>Liên Hệ</ContactButton>
-              </NavItems>
-            </NavContainer>
-          </NavInner>
-        </HeroNavigation>
-        <SubTitle>{subTitle}</SubTitle>
-        <Title>{title}</Title>
-        <SearchForm onSubmit={this.handleSearch}>
-          <SearchOption value={searchType} onChange={this.handleChangeType}>
-            <MenuItem value='hotel'>Tìm Phòng</MenuItem>
-            <MenuItem value='golf'>Tìm Sân Golf</MenuItem>
-            <MenuItem value='restaurant'>Tìm Nhà Hàng</MenuItem>
-          </SearchOption>
-          <SearchInput
-            value={searchText}
-            onChange={e => this.setState({ searchText: e.target.value })}
-            autoFocus
-            placeholder='Địa chỉ, khách sạn, thành phố'
-          />
-          <SearchButton onClick={this.handleSearch}>
-            <SearchIcon />
-          </SearchButton>
-        </SearchForm>
-        <BGImage />
-      </Wrapper>
+      <StaticQuery
+        query={graphql`
+          query HeroQuery {
+            placeholderImage: file(relativePath: { eq: "hero-image.png" }) {
+              childImageSharp {
+                fluid(maxWidth: 3000) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
+            contact: allPagesYaml(filter: { companyName: { ne: null } }) {
+              edges {
+                node {
+                  phone
+                  email
+                }
+              }
+            }
+          }
+        `}
+        render={({ contact, placeholderImage }) => (
+          <Wrapper>
+            <HeroNavigation>
+              <NavInner>
+                <Link to='/'>
+                  <Logo src={logo} />
+                </Link>
+                <NavContainer>
+                  <TopContact>
+                    <NavItem>{contact.edges[0].node.email}</NavItem>
+                    <NavItem>{contact.edges[0].node.phone}</NavItem>
+                    <NavItem>Tiếng Việt</NavItem>
+                  </TopContact>
+                  <NavItems>
+                    <NavItem to='/'>
+                      <FormattedMessage id='nav.home' />
+                    </NavItem>
+                    <NavItem to='/khach-san'>
+                      <FormattedMessage id='nav.hotel' />
+                    </NavItem>
+                    <NavItem to='/san-golf'>
+                      <FormattedMessage id='nav.golf' />
+                    </NavItem>
+                    <NavItem to='/nha-hang'>
+                      <FormattedMessage id='nav.restaurant' />
+                    </NavItem>
+                    <NavItem to='/tin-tuc'>
+                      <FormattedMessage id='nav.news' />
+                    </NavItem>
+                    <ContactButton to='/lien-he'>
+                      <FormattedMessage id='nav.contact' />
+                    </ContactButton>
+                  </NavItems>
+                </NavContainer>
+              </NavInner>
+            </HeroNavigation>
+            <SubTitle>
+              <FormattedMessage id='hero.title1' />
+            </SubTitle>
+            <Title>
+              <FormattedMessage id='hero.title2' />
+            </Title>
+            <SearchForm onSubmit={this.handleSearch}>
+              <SearchOption value={searchType} onChange={this.handleChangeType}>
+                <MenuItem value='hotel'>
+                  <FormattedMessage id='search.hotel' />
+                </MenuItem>
+                <MenuItem value='golf'>
+                  <FormattedMessage id='search.golf' />
+                </MenuItem>
+                <MenuItem value='restaurant'>
+                  <FormattedMessage id='search.restaurant' />
+                </MenuItem>
+              </SearchOption>
+              <SearchInput
+                value={searchText}
+                onChange={e => this.setState({ searchText: e.target.value })}
+                autoFocus
+                placeholder={intl.formatMessage({ id: 'search.placeholder' })}
+              />
+              <SearchButton onClick={this.handleSearch}>
+                <SearchIcon />
+              </SearchButton>
+            </SearchForm>
+            <StyledImg fluid={placeholderImage.childImageSharp.fluid} />
+          </Wrapper>
+        )}
+      />
     );
   }
 }
 
-export default Hero;
+export default injectIntl(Hero);
