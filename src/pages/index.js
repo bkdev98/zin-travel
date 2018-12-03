@@ -142,7 +142,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
         <FormattedMessage id='home.allServices' />
       </ShowAll>
     </Wrapper>
-    {savedServices.length && <Wrapper>
+    {savedServices.length ? <Wrapper>
       <Title>
         <FormattedMessage id='home.savedServices' />
       </Title>
@@ -155,7 +155,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
           ))}
         </Row>
       </Grid>
-    </Wrapper>}
+    </Wrapper> : null}
     <Wrapper>
       <Title>
         <FormattedMessage id='home.newsTitle' />
