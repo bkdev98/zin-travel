@@ -37,7 +37,7 @@ const Layout = ({ hideNavbar, children, locale }) => (
       <InjectedHelmet locale={locale} />
       {!hideNavbar && <Navbar />}
       {children}
-      <Footer />
+      <Footer locale={locale} />
     </>
   </IntlProvider>
 );

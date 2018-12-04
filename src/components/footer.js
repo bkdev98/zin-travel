@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { FormattedMessage } from 'react-intl';
-import { StaticQuery, graphql } from 'gatsby';
+import { StaticQuery, graphql, navigate } from 'gatsby';
+import { Location } from '@reach/router';
 
 import logo from '../images/logo-black.png';
 import Link from './link';
+import locales from '../locale/locales';
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -65,7 +67,7 @@ const Actions = styled.div`
   display: flex;
 `;
 
-const Action = styled.button`
+const Action = styled.option`
   border: 1px solid #d8d8d8;
   border-radius: 4px;
   padding: 5px 12px;
@@ -78,7 +80,22 @@ const Action = styled.button`
   }
 `;
 
-const Footer = () => (
+const changeLanguage = (locale, pathname) => {
+  Object.keys(locales).forEach(lang => {
+    if (!locales[lang].default && pathname.indexOf(`/${lang}/`) === 0) {
+      pathname = pathname.substring(3); // eslint-disable-line
+    }
+  });
+  switch (locale) {
+    case 'vi':
+      return navigate(pathname);
+    case 'en':
+      return navigate(`/en${pathname}`);
+    default: return;
+  }
+};
+
+const Footer = ({ locale }) => (
   <StaticQuery
     query={graphql`
       query FooterQuery {
@@ -156,7 +173,14 @@ const Footer = () => (
           <Bottom>
             <p><FormattedMessage id='footer.copyright' /> <strong>{contact.edges[0].node.companyName}</strong></p>
             <Actions>
-              <Action>Tiếng Việt</Action>
+              <Location>
+                {({ location }) => (
+                  <select value={locale} onChange={e => changeLanguage(e.target.value, location.pathname)}>
+                    <Action value='vi'>Tiếng Việt</Action>
+                    <Action value='en'>English</Action>
+                  </select>
+                )}
+              </Location>
               <Action>VNĐ</Action>
             </Actions>
           </Bottom>

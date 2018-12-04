@@ -157,7 +157,7 @@ const ArticleLayout = ({ data: { article, relatedArticles }, pageContext: { loca
           <ShowAll to='/tin-tuc'>Xem tất cả</ShowAll>
         </Container>
       </Wrapper>
-      <Footer />
+      <Footer locale={locale} />
     </>
   </IntlProvider>
 );

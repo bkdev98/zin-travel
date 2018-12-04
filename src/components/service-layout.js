@@ -740,7 +740,7 @@ class Layout extends Component {
               {relatedServices && <ShowAll to={typeToUrl(service.frontmatter.type)}>Xem thêm gợi ý</ShowAll>}
             </Container>
           </Wrapper>
-          <Footer />
+          <Footer locale={locale} />
           <Snackbar isError={isError} open={showSnackbar} message={snackbarMessage} onClose={this.handleCloseError} />
         </MuiThemeProvider>
       </IntlProvider>

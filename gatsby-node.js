@@ -63,7 +63,7 @@ exports.createPages = ({ graphql, actions }) => {
         Object.keys(locales).map(lang => {
           const localizedPath = locales[lang].default
             ? `tin-tuc${node.fields.slug}`
-            : `${locales[lang].path}/dich-vu${node.fields.slug}`;
+            : `${locales[lang].path}/tin-tuc${node.fields.slug}`;
           return createPage({
             path: localizedPath,
             component: path.resolve('./src/components/article-layout.js'),
