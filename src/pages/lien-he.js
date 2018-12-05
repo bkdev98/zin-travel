@@ -5,6 +5,8 @@ import { graphql } from 'gatsby';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'recompose';
 
 import Layout from '../components/layout';
 import Map from '../components/map';
@@ -126,6 +128,104 @@ const Form = styled.form`
   padding: 25px;
 `;
 
+const ContactForm = ({ classes, fields, handleChange, handleSubmit, intl }) => (
+  <Form onSubmit={handleSubmit}>
+    <ContactTitle><FormattedMessage id='contact.title' /></ContactTitle>
+    <Row>
+      <Col sm={12} md={6}>
+        <TextField
+          label={intl.formatMessage({ id: 'contact.name' })}
+          fullWidth
+          value={fields.customerName}
+          onChange={e => handleChange(e.target.value, 'customerName')}
+          margin="normal"
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            classes: {
+              root: classes.input,
+              input: classes.outline,
+            },
+          }}
+        />
+      </Col>
+      <Col sm={12} md={6}>
+        <TextField
+          label={intl.formatMessage({ id: 'contact.phone' })}
+          fullWidth
+          value={fields.customerPhone}
+          onChange={e => handleChange(e.target.value, 'customerPhone')}
+          margin="normal"
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            step: 300,
+            classes: {
+              root: classes.input,
+              input: classes.outline,
+            },
+          }}
+        />
+      </Col>
+    </Row>
+    <TextField
+      label={intl.formatMessage({ id: 'contact.email' })}
+      fullWidth
+      value={fields.customerEmail}
+      onChange={e => handleChange(e.target.value, 'customerEmail')}
+      margin="normal"
+      variant="outlined"
+      InputLabelProps={{
+        shrink: true,
+      }}
+      InputProps={{
+        classes: {
+          root: classes.input,
+          input: classes.outline,
+        },
+      }}
+    />
+    <TextField
+      label={intl.formatMessage({ id: 'contact.content' })}
+      multiline
+      line
+      fullWidth
+      rows={6}
+      rowsMax={6}
+      value={fields.content}
+      onChange={e => handleChange(e.target.value, 'content')}
+      margin="normal"
+      variant="outlined"
+      InputLabelProps={{
+        shrink: true,
+      }}
+      InputProps={{
+        classes: {
+          root: classes.input,
+        },
+      }}
+    />
+    <Button
+      size='large'
+      fullWidth
+      color='primary'
+      variant='contained'
+      classes={{
+        root: classes.button,
+      }}
+      onClick={handleSubmit}
+    >
+      <FormattedMessage id='contact.send' />
+    </Button>
+  </Form>
+);
+
+const InjectedForm = compose(injectIntl)(ContactForm);
+
 class LienHePage extends Component {
   state = {
     fields: {
@@ -166,105 +266,18 @@ class LienHePage extends Component {
                       <Image image={info.edges[0].node.contactBackground} />
                       <Information>
                         <Title>{info.edges[0].node.companyName}</Title>
-                        <Meta>Địa chỉ: <a>{info.edges[0].node.address}</a></Meta>
-                        <Meta>Số điện thoại: <a>{info.edges[0].node.phone}</a></Meta>
-                        <Meta>Email: <a>{info.edges[0].node.email}</a></Meta>
+                        <Meta><FormattedMessage id='contact.address' />: <a>{info.edges[0].node.address}</a></Meta>
+                        <Meta><FormattedMessage id='contact.phone' />: <a>{info.edges[0].node.phone}</a></Meta>
+                        <Meta><FormattedMessage id='contact.email' />: <a>{info.edges[0].node.email}</a></Meta>
                       </Information>
                     </Col>
                     <Col sm={12} md={6} lg={5}>
-                      <Form onSubmit={this.handleSubmit}>
-                        <ContactTitle>Liên Hệ</ContactTitle>
-                        <Row>
-                          <Col sm={12} md={6}>
-                            <TextField
-                              label="Họ và tên"
-                              fullWidth
-                              value={fields.customerName}
-                              onChange={e => this.handleChange(e.target.value, 'customerName')}
-                              margin="normal"
-                              variant="outlined"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              InputProps={{
-                                classes: {
-                                  root: classes.input,
-                                  input: classes.outline,
-                                },
-                              }}
-                            />
-                          </Col>
-                          <Col sm={12} md={6}>
-                            <TextField
-                              label="Số điện thoại"
-                              fullWidth
-                              value={fields.customerPhone}
-                              onChange={e => this.handleChange(e.target.value, 'customerPhone')}
-                              margin="normal"
-                              variant="outlined"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              InputProps={{
-                                step: 300,
-                                classes: {
-                                  root: classes.input,
-                                  input: classes.outline,
-                                },
-                              }}
-                            />
-                          </Col>
-                        </Row>
-                        <TextField
-                          label="Địa chỉ Email"
-                          fullWidth
-                          value={fields.customerEmail}
-                          onChange={e => this.handleChange(e.target.value, 'customerEmail')}
-                          margin="normal"
-                          variant="outlined"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          InputProps={{
-                            classes: {
-                              root: classes.input,
-                              input: classes.outline,
-                            },
-                          }}
-                        />
-                        <TextField
-                          label="Nội dung"
-                          multiline
-                          line
-                          fullWidth
-                          rows={6}
-                          rowsMax={6}
-                          value={fields.content}
-                          onChange={e => this.handleChange(e.target.value, 'content')}
-                          margin="normal"
-                          variant="outlined"
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          InputProps={{
-                            classes: {
-                              root: classes.input,
-                            },
-                          }}
-                        />
-                        <Button
-                          size='large'
-                          fullWidth
-                          color='primary'
-                          variant='contained'
-                          classes={{
-                            root: classes.button,
-                          }}
-                          onClick={this.handleSubmit}
-                        >
-                          Gửi lời nhắn
-                        </Button>
-                      </Form>
+                      <InjectedForm
+                        fields={fields}
+                        classes={classes}
+                        handleChange={this.handleChange}
+                        handleSubmit={this.handleSubmit}
+                      />
                     </Col>
                   </Row>
                 </Grid>

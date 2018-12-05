@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { graphql, Link } from 'gatsby';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { FormattedMessage } from 'react-intl';
 
 import ArticleCard from '../components/article-card';
 
@@ -72,8 +73,8 @@ const TinTucPage = ({ data: { articles }, pageContext: { locale } }) => (
   <Layout locale={locale}>
     <Wrapper>
       <Container>
-        <Title>Tin tức mới nhất về du lịch</Title>
-        <Link to={`tin-tuc${articles.edges[0].node.fields.slug}`}>
+        <Title><FormattedMessage id='news.title' /></Title>
+        <Link to={`/tin-tuc${articles.edges[0].node.fields.slug}`}>
           <Row>
             <Col sm={12} md={6} lg={7}>
               <FeaturedImage src={articles.edges[0].node.frontmatter.thumbnail} />
@@ -89,7 +90,7 @@ const TinTucPage = ({ data: { articles }, pageContext: { locale } }) => (
                 {articles.edges[0].node.excerpt}
               </FeaturedExcerpt>
               <FeaturedDate>
-                Đăng vào {articles.edges[0].node.frontmatter.createdAt}
+                <FormattedMessage id='news.createdAt' /> {articles.edges[0].node.frontmatter.createdAt}
               </FeaturedDate>
             </Col>
           </Row>

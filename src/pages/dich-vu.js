@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { graphql } from 'gatsby';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { FormattedMessage } from 'react-intl';
 
 import Layout from '../components/layout';
 import ServiceCard from '../components/service-card';
@@ -51,34 +52,39 @@ const Title = styled.h3`
   margin-bottom: 20px;
 `;
 
+const Empty = styled.p`
+  font-size: 16px;
+  margin-left: 40px;
+`;
+
 const DichVuPage = ({ data: { home, featuredServices, allServices }, pageContext: { locale } }) => (
   <Layout locale={locale}>
     <Wrapper>
       <Header>
         <HeaderOverlay image={home.edges[0].node.hotelImage} />
-        <h3>Dịch vụ du lịch Zin Travel</h3>
+        <h3><FormattedMessage id='service.title' /></h3>
       </Header>
       <Container>
-        <Title>Dịch vụ nổi bật</Title>
+        <Title><FormattedMessage id='service.featured' /></Title>
         <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Row>
-            {featuredServices.edges.map(({ node }) => (
+            {featuredServices ? featuredServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
                 <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
               </Col>
-            ))}
+            )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
         </Grid>
       </Container>
       <Container>
-        <Title>Tất cả dịch vụ</Title>
+        <Title><FormattedMessage id='service.allServices' /></Title>
         <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Row>
-            {allServices.edges.map(({ node }) => (
+            {allServices ? allServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
                 <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
               </Col>
-            ))}
+            )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
         </Grid>
       </Container>

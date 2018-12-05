@@ -144,10 +144,10 @@ const Footer = ({ locale }) => (
                 <ListHeader>Zin Travel</ListHeader>
                 <ul>
                   <ListItem>
-                    <Link to='/'>Điều khoản sử dụng</Link>
+                    <Link to='/'><FormattedMessage id='footer.termsOfUse' /></Link>
                   </ListItem>
                   <ListItem>
-                    <Link to='/'>Chính sách bảo mật</Link>
+                    <Link to='/'><FormattedMessage id='footer.privacyPolicy' /></Link>
                   </ListItem>
                   <ListItem>
                     <Link to='/'>Site Map</Link>

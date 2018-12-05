@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { graphql } from 'gatsby';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { FormattedMessage } from 'react-intl';
 
 import Layout from '../components/layout';
 import ServiceCard from '../components/service-card';
@@ -61,29 +62,29 @@ const KhachSanPage = ({ data: { home, featuredServices, allServices }, pageConte
     <Wrapper>
       <Header>
         <HeaderOverlay image={home.edges[0].node.hotelImage} />
-        <h3>Dịch vụ Khách Sạn</h3>
+        <h3><FormattedMessage id='hotel.title' /></h3>
       </Header>
       <Container>
-        <Title>Dịch vụ nổi bật</Title>
+        <Title><FormattedMessage id='service.featured' /></Title>
         <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Row>
             {featuredServices ? featuredServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
                 <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
               </Col>
-            )) : <Empty>Không tìm thấy dịch vụ!</Empty>}
+            )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
         </Grid>
       </Container>
       <Container>
-        <Title>Đặt phòng khách sạn</Title>
+        <Title><FormattedMessage id='hotel.smallTitle' /></Title>
         <Grid fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Row>
             {allServices ? allServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
                 <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
               </Col>
-            )) : <Empty>Không tìm thấy dịch vụ!</Empty>}
+            )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
         </Grid>
       </Container>
