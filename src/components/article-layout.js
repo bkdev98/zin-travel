@@ -4,10 +4,11 @@ import { graphql, Link } from 'gatsby';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import { IntlProvider, addLocaleData, injectIntl } from 'react-intl';
+import { IntlProvider, addLocaleData, injectIntl, FormattedMessage } from 'react-intl';
 import enData from 'react-intl/locale-data/en';
 import viData from 'react-intl/locale-data/vi';
 import { compose } from 'recompose';
+import ReactMarkdown from 'react-markdown';
 
 import Navbar from './navbar';
 import Footer from './footer';
@@ -67,10 +68,12 @@ const Date = styled(Category)`
 `;
 
 const Content = styled.div`
-  font-size: 16px;
-  margin-top: 20px;
-  p {
-    margin-bottom: 10px;
+  div {
+    font-size: 16px;
+    margin-top: 20px;
+    p {
+      margin-bottom: 10px;
+    }
   }
 `;
 
@@ -133,19 +136,28 @@ const ArticleLayout = ({ data: { article, relatedArticles }, pageContext: { loca
       <Wrapper>
         <Container>
           <Category>
-            <span>{article.frontmatter.tags.join(', ')}</span>
+            <span>{(locale === 'en' && article.frontmatter.tagsEng)
+              ? article.frontmatter.tagsEng.join(', ')
+              : article.frontmatter.tags.join(', ')}</span>
           </Category>
-          <Title>{article.frontmatter.title}</Title>
-          <Date>Ngày đăng: {moment(article.frontmatter.createdAt).calendar()}</Date>
+          <Title>{(locale === 'en' && article.frontmatter.titleEng)
+            ? article.frontmatter.titleEng
+            : article.frontmatter.title}</Title>
+          <Date><FormattedMessage id='article.createdAt' />: {moment(article.frontmatter.createdAt).calendar()}</Date>
           <FeaturedImage src={article.frontmatter.thumbnail} alt={article.frontmatter.title} />
-          <Content dangerouslySetInnerHTML={{ __html: article.html }} />
-          <RelatedTitle>Những tin liên quan</RelatedTitle>
+          <Content>
+            {(locale === 'en' && article.frontmatter.bodyEng)
+              ? <div><ReactMarkdown source={article.frontmatter.bodyEng} /></div>
+              : <div dangerouslySetInnerHTML={{ __html: article.html }} />}
+          </Content>
+          <RelatedTitle><FormattedMessage id='article.related' /></RelatedTitle>
           <Grid fluid style={{ padding: 0 }}>
             <Row>
               {relatedArticles ? relatedArticles.edges.map(({ node }) => (
                 <Col md={3} sm={12} key={node.id}>
                   <ArticleCard
                     small
+                    locale={locale}
                     data={node.frontmatter}
                     slug={node.fields.slug}
                     excerpt={node.excerpt}
@@ -154,7 +166,7 @@ const ArticleLayout = ({ data: { article, relatedArticles }, pageContext: { loca
               )) : <Empty>Không có bài viết liên quan</Empty>}
             </Row>
           </Grid>
-          <ShowAll to='/tin-tuc'>Xem tất cả</ShowAll>
+          <ShowAll to='/tin-tuc'><FormattedMessage id='article.seeAll' /></ShowAll>
         </Container>
       </Wrapper>
       <Footer locale={locale} />
@@ -170,9 +182,12 @@ export const query = graphql`
       html
       frontmatter {
         title
+        titleEng
         thumbnail
         createdAt
         tags
+        tagsEng
+        bodyEng
       }
     }
     relatedArticles: allMarkdownRemark(
@@ -185,9 +200,11 @@ export const query = graphql`
           id
           frontmatter {
             title
+            titleEng
             createdAt
             thumbnail
             tags
+            tagsEng
           }
           fields {
             slug

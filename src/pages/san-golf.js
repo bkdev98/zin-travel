@@ -70,7 +70,7 @@ const SanGolfPage = ({ data: { home, featuredServices, allServices }, pageContex
           <Row>
             {featuredServices ? featuredServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
-                <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
               </Col>
             )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
@@ -82,7 +82,7 @@ const SanGolfPage = ({ data: { home, featuredServices, allServices }, pageContex
           <Row>
             {allServices ? allServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
-                <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
               </Col>
             )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
@@ -140,6 +140,9 @@ export const pageQuery = graphql`
             type
             address
             price
+            titleEng
+            addressEng
+            priceEng
           }
           fields {
             slug

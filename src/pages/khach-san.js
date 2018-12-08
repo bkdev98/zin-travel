@@ -70,7 +70,7 @@ const KhachSanPage = ({ data: { home, featuredServices, allServices }, pageConte
           <Row>
             {featuredServices ? featuredServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
-                <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
               </Col>
             )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
@@ -82,7 +82,7 @@ const KhachSanPage = ({ data: { home, featuredServices, allServices }, pageConte
           <Row>
             {allServices ? allServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
-                <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
               </Col>
             )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
@@ -113,11 +113,14 @@ export const pageQuery = graphql`
           id
           frontmatter {
             title
+            titleEng
             createdAt
             images
             type
             address
+            addressEng
             price
+            priceEng
           }
           fields {
             slug
@@ -135,6 +138,9 @@ export const pageQuery = graphql`
           id
           frontmatter {
             title
+            titleEng
+            addressEng
+            priceEng
             createdAt
             images
             type

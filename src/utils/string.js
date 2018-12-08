@@ -1,4 +1,16 @@
-export const typeToText = (type) => {
+export const typeToText = (type, locale) => {
+  if (locale === 'en') {
+    switch (type) {
+      case 'hotel':
+        return 'Hotels';
+      case 'golf':
+        return 'Golf courses';
+      case 'restaurant':
+        return 'Restaurants';
+      default:
+        return type;
+    }
+  }
   switch (type) {
     case 'hotel':
       return 'Khách sạn';
@@ -24,7 +36,10 @@ export const typeToUrl = (type) => {
   }
 };
 
-export const typeToButtonText = (type) => {
+export const typeToButtonText = (type, locale) => {
+  if (locale === 'en') {
+    return 'Book Now';
+  }
   switch (type) {
     case 'hotel':
       return 'Đặt Phòng Ngay';

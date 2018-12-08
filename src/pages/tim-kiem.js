@@ -66,7 +66,7 @@ class TimKiemPage extends Component {
                 attribute='frontmatter.type'
                 defaultRefinement={[searchType]}
                 operator='or'
-                transformItems={items => items.filter(item => item.label.length).map(item => ({ ...item, label: typeToText(item.label) }))}
+                transformItems={items => items.filter(item => item.label.length).map(item => ({ ...item, label: typeToText(item.label, locale) }))}
               />
               <Hits hitComponent={SearchResult} />
             </InstantSearch>

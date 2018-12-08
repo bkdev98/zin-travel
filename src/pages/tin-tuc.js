@@ -81,10 +81,14 @@ const TinTucPage = ({ data: { articles }, pageContext: { locale } }) => (
             </Col>
             <Col sm={12} md={6} lg={5} style={{ position: 'relative' }}>
               <FeaturedCategory>
-                <span>{articles.edges[0].node.frontmatter.tags.join(', ')}</span>
+                <span>{locale === 'en' && articles.edges[0].node.frontmatter.tagsEng
+                  ? articles.edges[0].node.frontmatter.tagsEng.join(', ')
+                  : articles.edges[0].node.frontmatter.tags.join(', ')}</span>
               </FeaturedCategory>
               <FeaturedTitle>
-                {articles.edges[0].node.frontmatter.title}
+                {locale === 'en' && articles.edges[0].node.frontmatter.titleEng
+                  ? articles.edges[0].node.frontmatter.titleEng
+                  : articles.edges[0].node.frontmatter.title}
               </FeaturedTitle>
               <FeaturedExcerpt>
                 {articles.edges[0].node.excerpt}
@@ -100,6 +104,7 @@ const TinTucPage = ({ data: { articles }, pageContext: { locale } }) => (
             {articles && articles.edges.map(({ node }, idx) => idx !== 0 && (
               <Col sm={12} md={6} lg={4} key={node.id}>
                 <ArticleCard
+                  locale={locale}
                   small
                   data={node.frontmatter}
                   slug={node.fields.slug}
@@ -128,9 +133,11 @@ export const pageQuery = graphql`
           id
           frontmatter {
             title
+            titleEng
             createdAt
             thumbnail
             tags
+            tagsEng
           }
           fields {
             slug

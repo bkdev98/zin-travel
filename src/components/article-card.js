@@ -66,7 +66,7 @@ const ArticleCard = ({ data, slug, excerpt, large, small, locale }) => (
       <Meta>
         <Date>{data.createdAt}</Date>
         <Category>
-          <span>{(data.locale === 'en' && data.tagsEng) ? data.tagsEng.join(', ') : data.tags.join(', ')}</span>
+          <span>{(locale === 'en' && data.tagsEng) ? data.tagsEng.join(', ') : data.tags.join(', ')}</span>
         </Category>
       </Meta>
       <Title>{(locale === 'en' && data.titleEng) ? data.titleEng : data.title}</Title>

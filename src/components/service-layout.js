@@ -21,10 +21,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { IntlProvider, addLocaleData, injectIntl } from 'react-intl';
+import { IntlProvider, addLocaleData, injectIntl, FormattedMessage } from 'react-intl';
 import enData from 'react-intl/locale-data/en';
 import viData from 'react-intl/locale-data/vi';
 import { compose } from 'recompose';
+import ReactMarkdown from 'react-markdown';
 
 import Navbar from './navbar';
 import Footer from './footer';
@@ -312,7 +313,7 @@ class Layout extends Component {
     const encodedAddress = encodeURI(this.props.data.service.frontmatter.address);
     const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=AIzaSyAGjf9PEag69kVcGkWpDzGo0kUQgM4aiAE`);
     if (result && result.results) {
-      console.log(result.results[0]);
+      // console.log(result.results[0]);
       this.setState({
         location: {
           lat: result.results[0].geometry.location.lat,
@@ -461,15 +462,15 @@ class Layout extends Component {
                 <TopActions>
                   <ActionButton style={{ marginRight: 10 }} onClick={this.handleShareToFb}>
                     <IoMdShare />
-                    Chia sẻ
+                    <FormattedMessage id='service.share' />
                   </ActionButton>
                   <ActionButton onClick={() => this.handleToggleSave(isSaved)}>
                     <IoIosBookmark />
-                    {isSaved ? 'Huỷ lưu' : 'Lưu lại'}
+                    {isSaved ? 'Huỷ lưu' : <FormattedMessage id='service.save' />}
                   </ActionButton>
                 </TopActions>
                 <BottomActions>
-                  <ActionButton onClick={this.handleShowGallery}>Xem ảnh</ActionButton>
+                  <ActionButton onClick={this.handleShowGallery}><FormattedMessage id='service.showPhoto' /></ActionButton>
                 </BottomActions>
               </ActionButtonWrapper>
             </ImageWrapper>
@@ -480,32 +481,34 @@ class Layout extends Component {
                     <Left>
                       <Information>
                         <Link to={typeToUrl(service.frontmatter.type)}>
-                          {typeToText(service.frontmatter.type)}
+                          {typeToText(service.frontmatter.type, locale)}
                         </Link> • <AnchorLink href='#map'>
-                          {service.frontmatter.address}
+                          {(locale === 'en' && service.frontmatter.addressEng) ? service.frontmatter.addressEng : service.frontmatter.address}
                         </AnchorLink>
                       </Information>
-                      <Title>{service.frontmatter.title}</Title>
+                      <Title>{(locale === 'en' && service.frontmatter.titleEng) ? service.frontmatter.titleEng : service.frontmatter.title}</Title>
                       <Meta>
                         {service.frontmatter.sokhach && (
-                          <div><MdPeople />{service.frontmatter.sokhach} khách</div>
+                          <div><MdPeople />{service.frontmatter.sokhach}&nbsp;<FormattedMessage id='service.persons' /></div>
                         )}
                         {service.frontmatter.sogiuong && (
-                          <div><MdHotel />{service.frontmatter.sogiuong} giường</div>
+                          <div><MdHotel />{service.frontmatter.sogiuong}&nbsp;<FormattedMessage id='service.beds' /></div>
                         )}
                         {service.frontmatter.sophongtam && (
-                          <div><MdHotTub />{service.frontmatter.sophongtam} phòng tắm</div>
+                          <div><MdHotTub />{service.frontmatter.sophongtam}&nbsp;<FormattedMessage id='service.bedRooms' /></div>
                         )}
                       </Meta>
                       <Content>
                         <ShowMore lines={4} more={<TruncateButton isMore />} less={<TruncateButton />}>
-                          <div dangerouslySetInnerHTML={{ __html: service.html }} />
+                          {(locale === 'en' && service.frontmatter.bodyEng)
+                            ? <ReactMarkdown source={service.frontmatter.bodyEng} />
+                            : <div dangerouslySetInnerHTML={{ __html: service.html }} />}
                         </ShowMore>
                       </Content>
                       <Divider />
                       {service.frontmatter.utilities && (
                         <>
-                          <SectionTitle>Tiện nghi</SectionTitle>
+                          <SectionTitle><FormattedMessage id='service.utilities' /></SectionTitle>
                           <Utilities>
                             <Row>
                               {service.frontmatter.utilities.map(utility => (
@@ -518,7 +521,7 @@ class Layout extends Component {
                           <Divider />
                         </>
                       )}
-                      <SectionTitle>Hình ảnh</SectionTitle>
+                      <SectionTitle><FormattedMessage id='service.photo' /></SectionTitle>
                       <Slider
                         slidesToShow={3}
                         infinite
@@ -546,7 +549,7 @@ class Layout extends Component {
                         ))}
                       </Slider>
                       <Divider />
-                      <SectionTitle id='map' location={location}>Bản đồ</SectionTitle>
+                      <SectionTitle id='map' location={location}><FormattedMessage id='service.map' /></SectionTitle>
                       <Map address={service.frontmatter.address} />
                       <Divider />
                     </Left>
@@ -719,7 +722,7 @@ class Layout extends Component {
                             }}
                             onClick={this.handleSubmit}
                           >
-                            {typeToButtonText(service.frontmatter.type)}
+                            {typeToButtonText(service.frontmatter.type, locale)}
                           </Button>
                         </form>
                       </Right>
@@ -770,14 +773,18 @@ export const query = graphql`
       id
       frontmatter {
         title
+        titleEng
+        bodyEng
         type
         images
         createdAt
         sokhach
         address
+        addressEng
         sogiuong
         sophongtam
         price
+        priceEng
         utilities {
           icon
           title
@@ -798,11 +805,14 @@ export const query = graphql`
           id
           frontmatter {
             title
+            titleEng
             type
             images
             createdAt
             address
+            addressEng
             price
+            priceEng
           }
           fields {
             slug

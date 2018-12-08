@@ -113,11 +113,14 @@ export const pageQuery = graphql`
           id
           frontmatter {
             title
+            titleEng
             createdAt
             images
             type
             price
+            priceEng
             address
+            addressEng
           }
           fields {
             slug
@@ -140,6 +143,9 @@ export const pageQuery = graphql`
             price
             type
             address
+            priceEng
+            addressEng
+            titleEng
           }
           fields {
             slug

@@ -49,7 +49,7 @@ const ServiceCard = ({ data, slug, locale }) => (
     <Link to={`dich-vu${slug}`}>
       <FeaturedImage src={data.images[0]} alt={(locale === 'en' && data.titleEng) ? data.titleEng : data.title} />
       <Category>
-        <span>{typeToText(data.type)} </span> • <span> {`${data.address.slice(0, 20)}...`}</span>
+        <span>{typeToText(data.type, locale)} </span> • <span> {`${data.address.slice(0, 20)}...`}</span>
       </Category>
       <Title>{(locale === 'en' && data.titleEng) ? data.titleEng : data.title}</Title>
       <Price>{(locale === 'en' && data.priceEng) ? data.priceEng : data.price}</Price>
