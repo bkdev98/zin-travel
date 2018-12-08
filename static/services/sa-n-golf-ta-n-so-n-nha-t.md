@@ -44,7 +44,7 @@ createdAt: 14/11/2018
 ---
 Spacious and comfortable room with four-poster bed, private bath, air conditioning and windows to the street, located on the first floor of our B&B.
 
-**The space**
+**Không **
 
 Spacious and comfortable room with four-poster bed, private bath, air conditioning and windows to the street, located on the first floor of our B&B.
 
