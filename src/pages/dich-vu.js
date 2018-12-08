@@ -70,7 +70,7 @@ const DichVuPage = ({ data: { home, featuredServices, allServices }, pageContext
           <Row>
             {featuredServices ? featuredServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
-                <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
               </Col>
             )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>
@@ -82,7 +82,7 @@ const DichVuPage = ({ data: { home, featuredServices, allServices }, pageContext
           <Row>
             {allServices ? allServices.edges.map(({ node }) => (
               <Col lg={3} md={6} sm={12} key={node.id}>
-                <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+                <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
               </Col>
             )) : <Empty><FormattedMessage id='service.notfound' /></Empty>}
           </Row>

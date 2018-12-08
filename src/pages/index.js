@@ -133,7 +133,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
         <Row>
           {services.edges.map(({ node }) => (
             <Col lg={3} md={6} sm={12} key={node.id}>
-              <ServiceCard data={node.frontmatter} slug={node.fields.slug} />
+              <ServiceCard locale={locale} data={node.frontmatter} slug={node.fields.slug} />
             </Col>
           ))}
         </Row>
@@ -150,7 +150,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
         <Row>
           {savedServices.map(item => (
             <Col lg={3} md={6} sm={12} key={item.id}>
-              <ServiceCard data={item.frontmatter} slug={item.fields.slug} />
+              <ServiceCard locale={locale} data={item.frontmatter} slug={item.fields.slug} />
             </Col>
           ))}
         </Row>
@@ -166,6 +166,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
             <Col lg={6} md={4} sm={12}>
               <ArticleCard
                 large
+                locale={locale}
                 data={articles.edges[0].node.frontmatter}
                 slug={articles.edges[0].node.fields.slug}
                 excerpt={articles.edges[0].node.excerpt}
@@ -175,6 +176,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
           {articles && articles.edges[1] && (
             <Col lg={3} md={4} sm={12}>
               <ArticleCard
+                locale={locale}
                 data={articles.edges[1].node.frontmatter}
                 slug={articles.edges[1].node.fields.slug}
                 excerpt={articles.edges[1].node.excerpt}
@@ -184,6 +186,7 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
           {articles && articles.edges[2] && (
             <Col lg={3} md={4} sm={12}>
               <ArticleCard
+                locale={locale}
                 data={articles.edges[2].node.frontmatter}
                 slug={articles.edges[2].node.fields.slug}
                 excerpt={articles.edges[2].node.excerpt}
@@ -227,8 +230,11 @@ export const pageQuery = graphql`
             createdAt
             images
             price
+            priceEng
+            titleEng
             type
             address
+            addressEng
           }
           fields {
             slug
@@ -246,9 +252,11 @@ export const pageQuery = graphql`
           id
           frontmatter {
             title
+            titleEng
             createdAt
             thumbnail
             tags
+            tagsEng
           }
           fields {
             slug

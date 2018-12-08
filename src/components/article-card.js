@@ -59,17 +59,17 @@ const Date = styled(Category)`
   margin-right: 10px;
 `;
 
-const ArticleCard = ({ data, slug, excerpt, large, small }) => (
+const ArticleCard = ({ data, slug, excerpt, large, small, locale }) => (
   <Wrapper>
     <Link to={`tin-tuc${slug}`}>
-      <FeaturedImage src={data.thumbnail} alt={data.title} large={large} small={small} />
+      <FeaturedImage src={data.thumbnail} alt={(locale === 'en' && data.titleEng) ? data.titleEng : data.title} large={large} small={small} />
       <Meta>
         <Date>{data.createdAt}</Date>
         <Category>
-          <span>{data.tags.join(', ')}</span>
+          <span>{(data.locale === 'en' && data.tagsEng) ? data.tagsEng.join(', ') : data.tags.join(', ')}</span>
         </Category>
       </Meta>
-      <Title>{data.title}</Title>
+      <Title>{(locale === 'en' && data.titleEng) ? data.titleEng : data.title}</Title>
       <Excerpt>{excerpt}</Excerpt>
     </Link>
   </Wrapper>

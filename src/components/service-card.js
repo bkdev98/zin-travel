@@ -44,15 +44,15 @@ const Price = styled.p`
   font-weight: 600;
 `;
 
-const ServiceCard = ({ data, slug }) => (
+const ServiceCard = ({ data, slug, locale }) => (
   <Wrapper>
     <Link to={`dich-vu${slug}`}>
-      <FeaturedImage src={data.images[0]} alt={data.title} />
+      <FeaturedImage src={data.images[0]} alt={(locale === 'en' && data.titleEng) ? data.titleEng : data.title} />
       <Category>
         <span>{typeToText(data.type)} </span> • <span> {`${data.address.slice(0, 20)}...`}</span>
       </Category>
-      <Title>{data.title}</Title>
-      <Price>{data.price}</Price>
+      <Title>{(locale === 'en' && data.titleEng) ? data.titleEng : data.title}</Title>
+      <Price>{(locale === 'en' && data.priceEng) ? data.priceEng : data.price}</Price>
     </Link>
   </Wrapper>
 );

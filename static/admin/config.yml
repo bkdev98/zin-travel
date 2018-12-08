@@ -89,8 +89,11 @@ collections:
     folder: static/articles
     create: true
     fields:
-      - { name: title, label: Tiêu đề, widget: string }
+      - { name: title, label: Tiêu đề (Tiếng Việt), widget: string }
+      - { name: titleEng, label: Tiêu đề (Tiếng Anh), widget: string, required: false }
       - { name: createdAt, label: Ngày đăng, widget: date, format: DD/MM/YYYY }
       - { name: thumbnail, label: Hình ảnh, widget: image }
-      - { name: body, label: Nội dung, widget: markdown }
-      - { name: tags, label: Thẻ bài viết, widget: list }
+      - { name: body, label: Nội dung (Tiếng Việt), widget: markdown }
+      - { name: bodyEng, label: Nội dung (Tiếng Anh), widget: markdown, required: false }
+      - { name: tags, label: Thẻ bài viết (Tiếng Việt), widget: list, hint: 'Cách nhau bởi dấu phẩy' }
+      - { name: tagsEng, label: Thẻ bài viết (Tiếng Anh), widget: list, hint: 'Cách nhau bởi dấu phẩy', required: false }

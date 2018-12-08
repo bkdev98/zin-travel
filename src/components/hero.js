@@ -6,13 +6,14 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import SearchIcon from '@material-ui/icons/Search';
+import { FiMail, FiPhone } from 'react-icons/fi';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import logo from '../images/logo-white.png';
 import Link from './link';
 
 const Wrapper = styled.div`
-  height: 80vh;
+  height: 70vh;
   width: 100%;
   position: relative;
   display: flex;
@@ -132,6 +133,21 @@ const NavItems = styled.div`
   align-items: center;
 `;
 
+const NavContact = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    margin-right: 5px;
+    width: 18px;
+    height: 18px;
+  }
+  color: white;
+  font-size: 16px;
+  margin-left: 25px;
+  text-decoration: none;
+`;
+
 const NavItem = styled(Link)`
   color: white;
   font-size: 16px;
@@ -218,9 +234,9 @@ class Hero extends Component {
                 </Link>
                 <NavContainer>
                   <TopContact>
-                    <NavItem>{contact.edges[0].node.email}</NavItem>
-                    <NavItem>{contact.edges[0].node.phone}</NavItem>
-                    <NavItem>Tiếng Việt</NavItem>
+                    <NavContact href="#"><FiMail /> {contact.edges[0].node.email}</NavContact>
+                    <NavContact href="#"><FiPhone /> {contact.edges[0].node.phone}</NavContact>
+                    {/* <NavItem>Tiếng Việt</NavItem> */}
                   </TopContact>
                   <NavItems>
                     <NavItem to='/'>
