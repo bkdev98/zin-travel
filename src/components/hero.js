@@ -7,10 +7,12 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import SearchIcon from '@material-ui/icons/Search';
 import { FiMail, FiPhone } from 'react-icons/fi';
+import { IoIosMenu } from 'react-icons/io';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import logo from '../images/logo-white.png';
 import Link from './link';
+import { media } from '../utils/media';
 
 const Wrapper = styled.div`
   height: 70vh;
@@ -22,6 +24,27 @@ const Wrapper = styled.div`
   flex-direction: column;
   color: white;
   text-align: center;
+  ${media.desktop`
+    padding: 0px 15px;
+    height: 65vh;
+  `};
+`;
+
+const MenuBurger = styled.button`
+  background: transparent;
+  color: white;
+  display: none;
+  ${media.tablet`
+    display: block;
+  `};
+  svg {
+    width: 50px;
+    height: 50px;
+    ${media.thone`
+      width: 40px;
+      height: 40px;
+    `};
+  }
 `;
 
 const StyledImg = styled(Img)`
@@ -37,6 +60,12 @@ const StyledImg = styled(Img)`
 const Logo = styled.img`
   width: 95px;
   height: auto;
+  ${media.tablet`
+    width: 75px;
+  `};
+  ${media.phablet`
+    width: 65px;
+  `};
 `;
 
 const SubTitle = styled.h3`
@@ -44,6 +73,10 @@ const SubTitle = styled.h3`
   letter-spacing: 0.4px;
   font-size: 30px;
   margin-bottom: 20px;
+  ${media.tablet`
+    font-size: 24px;
+    margin-bottom: 15px;
+  `};
 `;
 
 const Title = styled.h1`
@@ -51,6 +84,10 @@ const Title = styled.h1`
   letter-spacing: 0.4px;
   font-size: 44px;
   margin-bottom: 20px;
+  ${media.tablet`
+    font-size: 34px;
+    margin-bottom: 15px;
+  `};
 `;
 
 const SearchForm = styled.form`
@@ -77,6 +114,21 @@ const SearchOption = styled(Select)`
   }
   && {
     font-family: 'Open Sans', sans-serif;
+    ${media.desktop`
+      width: 130px;
+    `};
+    ${media.thone`
+      width: 110px;
+      font-size: 16px;
+      padding-left: 5px;
+    `};
+    ${media.phablet`
+      width: 90px;
+      font-size: 14px;
+    `};
+    ${media.phone`
+      width: 70px;
+    `};
   }
 `;
 
@@ -84,16 +136,41 @@ const SearchInput = styled.input`
   margin-left: 5px;
   min-width: 360px;
   padding-left: 20px;
+  font-size: 18px;
+  ${media.desktop`
+    min-width: 300px;
+  `};
+  ${media.thone`
+    font-size: 16px;
+    min-width: 260px;
+    padding-left: 15px;
+  `};
+  ${media.phablet`
+    font-size: 14px;
+    min-width: 210px;
+    padding-left: 10px;
+  `};
+  ${media.phone`
+    min-width: 180px;
+    margin-left: 0px;
+  `};
 `;
 
 const SearchButton = styled(Button)`
-  padding-left: 20px;
-  padding-right: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: 0.2s linear;
   && {
+    ${media.thone`
+      min-width: 40px !important;
+    `};
+    ${media.phablet`
+      min-width: 35px !important;
+    `};
+    ${media.phone`
+      min-width: 30px !important;
+    `};
     background: #D4AF65;
     color: white;
     border-radius: 0px 5px 5px 0px;
@@ -107,6 +184,9 @@ const HeroNavigation = styled.div`
   position: absolute;
   width: 100%;
   top: 25px;
+  ${media.desktop`
+    padding: 0px 20px;
+  `};
 `;
 
 const NavInner = styled.div`
@@ -121,6 +201,9 @@ const NavContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  ${media.tablet`
+    display: none;
+  `};
 `;
 
 const TopContact = styled.div`
@@ -203,7 +286,7 @@ class Hero extends Component {
 
   render() {
     const { searchText, searchType } = this.state;
-    const { intl } = this.props;
+    const { intl, toggleMenu } = this.props;
     return (
       <StaticQuery
         query={graphql`
@@ -232,6 +315,9 @@ class Hero extends Component {
                 <Link to='/'>
                   <Logo src={logo} />
                 </Link>
+                <MenuBurger onClick={toggleMenu}>
+                  <IoIosMenu />
+                </MenuBurger>
                 <NavContainer>
                   <TopContact>
                     <NavContact href="#"><FiMail /> {contact.edges[0].node.email}</NavContact>

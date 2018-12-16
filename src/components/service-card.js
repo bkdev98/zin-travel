@@ -10,6 +10,7 @@ const Wrapper = styled.div`
     text-decoration: none;
   }
   margin-bottom: 15px;
+  max-width: 300px;
 `;
 
 const FeaturedImage = styled.img`

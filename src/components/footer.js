@@ -8,10 +8,14 @@ import { Location } from '@reach/router';
 import logo from '../images/logo-black.png';
 import Link from './link';
 import locales from '../locale/locales';
+import { media } from '../utils/media';
 
 const Wrapper = styled.div`
   margin-top: 50px;
   border-top: 1px solid #d8d8d8;
+  ${media.tablet`
+    padding-bottom: 65px;
+  `};
 `;
 
 const Inner = styled.div`
@@ -58,6 +62,7 @@ const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 15px;
   p {
     font-size: 16px;
   }

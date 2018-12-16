@@ -26,6 +26,7 @@ import enData from 'react-intl/locale-data/en';
 import viData from 'react-intl/locale-data/vi';
 import { compose } from 'recompose';
 import ReactMarkdown from 'react-markdown';
+import Modal from 'react-responsive-modal';
 
 import Navbar from './navbar';
 import Footer from './footer';
@@ -39,6 +40,8 @@ import SlideArrow from './slide-arrow';
 import Map from './map';
 import ServiceCard from './service-card';
 import { saveService, unsaveService } from '../actions';
+import { media } from '../utils/media';
+import MobileMenu from './mobile-menu';
 
 import en from '../locale/en.json';
 import vi from '../locale/vi.json';
@@ -59,6 +62,11 @@ const styles = () => ({
     color: 'white',
     textTransform: 'none',
   },
+  bottomButton: {
+    margin: '10px 0',
+    color: 'white',
+    textTransform: 'none',
+  },
 });
 
 const theme = createMuiTheme({
@@ -76,6 +84,9 @@ const Wrapper = styled.div`
 const Container = styled.div`
   max-width: 1200px;
   margin: 0px auto;
+  ${media.desktop`
+    padding: 0px 20px;
+  `};
 `;
 
 const Left = styled.div`
@@ -101,6 +112,9 @@ const Right = styled.div`
   margin-left: 15px;
   background: white;
   padding: 20px;
+  ${media.tablet`
+    display: none;
+  `};
 `;
 
 const ImageWrapper = styled.div`
@@ -132,14 +146,14 @@ const BottomActions = styled.div`
   position: absolute;
   bottom: 20px;
   display: flex;
-  left: 0;
+  left: 20px;
 `;
 
 const TopActions = styled.div`
   position: absolute;
   top: 20px;
   display: flex;
-  right: 0;
+  right: 20px;
 `;
 
 const ActionButton = styled.button`
@@ -277,6 +291,22 @@ const ShowAll = styled(Link)`
   }
 `;
 
+const BottomWrapper = styled.div`
+  width: 100%;
+  height: 65px;
+  background-color: white;
+  border-top: 1px solid #ccc;
+  justify-content: space-between;
+  padding: 0 20px;
+  display: none;
+  position: fixed;
+  bottom: 0;
+  z-index: 999;
+  ${media.tablet`
+    display: flex;
+  `};
+`;
+
 const MyHelmet = ({ intl, locale }) => (
   <Helmet
     title={intl.formatMessage({ id: 'site.title' })}
@@ -307,6 +337,8 @@ class Layout extends Component {
     showSnackbar: false,
     snackbarMessage: '',
     isError: false,
+    menuOpen: false,
+    modalOpen: false,
   }
 
   componentDidMount = async () => {
@@ -437,9 +469,13 @@ class Layout extends Component {
     }
   }
 
+  toggleMenu = () => {
+    this.setState({ menuOpen: !this.state.menuOpen });
+  }
+
   render() {
     const { data: { service, relatedServices }, classes, savedServices, pageContext: { locale } } = this.props;
-    const { showGallery, location, fields, showSnackbar, snackbarMessage, isError } = this.state;
+    const { showGallery, location, fields, showSnackbar, snackbarMessage, isError, menuOpen, modalOpen } = this.state;
     const imageData = service.frontmatter.images.map(image => ({ original: image, thumbnail: image, originalClass: 'gallery-img' }));
     const isSaved = savedServices.findIndex(item => item.id === service.id) >= 0;
 
@@ -447,7 +483,202 @@ class Layout extends Component {
       <IntlProvider locale={locale} messages={messages[locale]}>
         <MuiThemeProvider theme={theme}>
           <InjectedHelmet locale={locale} />
-          <Navbar />
+          <MobileMenu
+            toggleMenu={this.toggleMenu}
+            isOpen={menuOpen}
+            pageWrapId={'page-wrap'}
+            hideCloseButton
+          />
+          <Navbar toggleMenu={this.toggleMenu} />
+          <BottomWrapper>
+            <div>
+              <Price style={{ fontSize: 16, marginTop: 10 }}>{service.frontmatter.price}</Price>
+              <ReactStars
+                value={5}
+                size={12}
+                color2='#D4AF65'
+                edit={false}
+              />
+            </div>
+            <Button
+              color='primary'
+              variant='contained'
+              classes={{ root: classes.bottomButton }}
+              onClick={() => this.setState({ modalOpen: true })}
+            >
+              {typeToButtonText(service.frontmatter.type, locale)}
+            </Button>
+          </BottomWrapper>
+          <Modal center open={modalOpen} onClose={() => this.setState({ modalOpen: false })}>
+            <Price>{service.frontmatter.price}</Price>
+            <ReactStars
+              value={5}
+              size={14}
+              color2='#D4AF65'
+              edit={false}
+            />
+            <Divider />
+            <form onSubmit={this.handleSubmit}>
+              {service.frontmatter.type === 'hotel' ? (
+                <Row>
+                  <Col sm={12} md={6}>
+                    <TextField
+                      label="Ngày đến"
+                      fullWidth
+                      type='date'
+                      value={fields.startDate}
+                      onChange={e => this.handleChange(e.target.value, 'startDate')}
+                      margin="normal"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        classes: {
+                          root: classes.input,
+                          input: classes.outline,
+                        },
+                      }}
+                    />
+                  </Col>
+                  <Col sm={12} md={6}>
+                    <TextField
+                      label="Ngày đi"
+                      fullWidth
+                      type='date'
+                      value={fields.endDate}
+                      onChange={e => this.handleChange(e.target.value, 'endDate')}
+                      margin="normal"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        classes: {
+                          root: classes.input,
+                          input: classes.outline,
+                        },
+                      }}
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <Row>
+                  <Col sm={12} md={6}>
+                    <TextField
+                      label="Ngày dùng"
+                      fullWidth
+                      type='date'
+                      value={fields.date}
+                      onChange={e => this.handleChange(e.target.value, 'date')}
+                      margin="normal"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        classes: {
+                          root: classes.input,
+                          input: classes.outline,
+                        },
+                      }}
+                    />
+                  </Col>
+                  <Col sm={12} md={6}>
+                    <TextField
+                      label="Thời gian"
+                      fullWidth
+                      type='time'
+                      value={fields.time}
+                      onChange={e => this.handleChange(e.target.value, 'time')}
+                      margin="normal"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        step: 300,
+                        classes: {
+                          root: classes.input,
+                          input: classes.outline,
+                        },
+                      }}
+                    />
+                  </Col>
+                </Row>
+              )}
+              <TextField
+                label="Số khách"
+                fullWidth
+                select
+                value={fields.customerCount}
+                onChange={e => this.handleChange(e.target.value, 'customerCount')}
+                margin="normal"
+                variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  classes: {
+                    root: classes.input,
+                    input: classes.outline,
+                  },
+                }}
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+              </TextField>
+              <TextField
+                label="Tên của bạn"
+                fullWidth
+                margin="normal"
+                value={fields.customerName}
+                onChange={e => this.handleChange(e.target.value, 'customerName')}
+                variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  classes: {
+                    root: classes.input,
+                    input: classes.outline,
+                  },
+                }}
+              />
+              <TextField
+                label="Số điện thoại"
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                value={fields.customerPhone}
+                onChange={e => this.handleChange(e.target.value, 'customerPhone')}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  classes: {
+                    root: classes.input,
+                    input: classes.outline,
+                  },
+                }}
+              />
+              <Button
+                size='large'
+                fullWidth
+                color='primary'
+                variant='contained'
+                classes={{
+                  root: classes.button,
+                }}
+                onClick={this.handleSubmit}
+              >
+                {typeToButtonText(service.frontmatter.type, locale)}
+              </Button>
+            </form>
+          </Modal>
           <Wrapper>
             <ImageWrapper>
               <Featured image={service.frontmatter.images[0]} />

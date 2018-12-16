@@ -1,119 +1,125 @@
 import React, { Component } from 'react';
 import { Link } from 'gatsby';
-import { Spring } from 'react-spring';
+import { slide as Menu } from 'react-burger-menu';
+import { FormattedMessage } from 'react-intl';
+import { IoIosClose } from 'react-icons/io';
 
 import styled from 'styled-components';
+// import { media } from '../utils/media';
 import { media } from '../utils/media';
 
 const MenuContainer = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   height: 100vh;
-  z-index: 10;
-  outline: 0;
-  transition: 'all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1)';
-  transform: translateX(${props => (props.menuOpen ? 0 : 100)}vw);
-  visibility: ${props => (props.menuOpen ? 'visible' : 'hidden')};
-  display: none;
-  ${media.tablet`display: block;`};
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
   background-color: white;
-  padding: 50px;
-  width: 50vw;
-  height: 100%;
-  position: relative;
-  right: 0;
-  margin-left: auto;
-  ${media.thone`padding: 25px;`};
-  ${media.phablet`width: 75vw;`};
-  ${media.tiny`padding: 10px;`};
+  padding: 25px;
 `;
 
-const NavLinks = styled.nav`
+const NavItems = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   flex-direction: column;
-  text-align: center;
 `;
 
-const NavListItem = styled.li`
-  margin: 10px 20px;
-  position: relative;
-  font-size: 14px;
-  color: white;
-  list-style: none;
-  counter-increment: item 1;
-  &:before {
-    content: '0' counter(item) '.';
-    color: #FB7EBB;
-    font-size: 14px;
-    margin-bottom: 5px;
+const MenuBurger = styled.button`
+  background: white;
+  color: #4A4A4A;
+  width: 100%;
+  text-align: right;
+  svg {
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+    ${media.thone`
+      width: 40px;
+      height: 40px;
+    `};
   }
 `;
 
-const NavLink = styled(Link)`
-  padding: 3px 20px 20px;
-  width: 100%;
+const NavItem = styled(Link)`
+  font-size: 20px;
   text-decoration: none;
-  color: #3C3C3E;
+  position: relative;
+  margin: 10px 0px;
+  transition: all 0.4s ease-in-out;
+  color: #4A4A4A;
+  padding-bottom: 4px;
+  ${media.thone`
+    font-size: 18px;
+  `};
+  :hover {
+    color: #D4AF65;
+  }
+  ::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #D4AF65;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease-in-out;
+    transition-delay: 0.1s;
+  }
+  :hover::after {
+    transform: scaleX(1);
+    transition-delay: 0s;
+  }
 `;
 
-class Menu extends Component {
+const ContactButton = styled(Link)`
+  background: transparent;
+  border: 1.5px solid white;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-left: 25px;
+  font-size: 16px;
+  color: white;
+  padding: 5px 20px;
+  transition: background 0.4s ease-in-out;
+  :hover {
+    background: rgba(255,255,255,0.1);
+  }
+`;
+
+class MobileMenu extends Component {
   render() {
-    const { menuOpen, handleMenuClick } = this.props;
+    const { toggleMenu, hideCloseButton, ...props } = this.props;
 
     return (
-      <MenuContainer
-        menuOpen={menuOpen}
-        onClick={handleMenuClick}
-        aria-hidden={!menuOpen}
-        tabIndex={menuOpen ? 1 : -1}
-      >
-        <Sidebar>
-          <NavLinks>
-            <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={300}>
-              {styles => (
-                <NavListItem style={styles}>
-                  <NavLink to='/'>About</NavLink>
-                </NavListItem>
-              )}
-            </Spring>
-            <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={400}>
-              {styles => (
-                <NavListItem style={styles}>
-                  <NavLink to='/blog'>Articles</NavLink>
-                </NavListItem>
-              )}
-            </Spring>
-            <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={500}>
-              {styles => (
-                <NavListItem style={styles}>
-                  <NavLink to='/projects'>Projects</NavLink>
-                </NavListItem>
-              )}
-            </Spring>
-            <Spring from={{ marginBottom: 10, opacity: 0 }} to={{ marginBottom: 0, opacity: 1 }} delay={600}>
-              {styles => (
-                <NavListItem style={styles}>
-                  <NavLink to='contact'>Contact</NavLink>
-                </NavListItem>
-              )}
-            </Spring>
-          </NavLinks>
-        </Sidebar>
-      </MenuContainer>
+      <Menu right {...props}>
+        {!hideCloseButton && <MenuBurger onClick={toggleMenu}>
+          <IoIosClose />
+        </MenuBurger>}
+        <MenuContainer>
+          <NavItems>
+            <NavItem to='/'>
+              <FormattedMessage id='nav.home' />
+            </NavItem>
+            <NavItem to='/khach-san'>
+              <FormattedMessage id='nav.hotel' />
+            </NavItem>
+            <NavItem to='/san-golf'>
+              <FormattedMessage id='nav.golf' />
+            </NavItem>
+            <NavItem to='/nha-hang'>
+              <FormattedMessage id='nav.restaurant' />
+            </NavItem>
+            <NavItem to='/tin-tuc'>
+              <FormattedMessage id='nav.news' />
+            </NavItem>
+            <ContactButton to='/lien-he'>
+              <FormattedMessage id='nav.contact' />
+            </ContactButton>
+          </NavItems>
+        </MenuContainer>
+      </Menu>
     );
   }
 }
 
-export default Menu;
+export default MobileMenu;

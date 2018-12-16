@@ -10,6 +10,7 @@ import Layout from '../components/layout';
 import Hero from '../components/hero';
 import ServiceCard from '../components/service-card';
 import ArticleCard from '../components/article-card';
+import { media } from '../utils/media';
 
 const styles = theme => ({
   button: {
@@ -35,10 +36,14 @@ const Wrapper = styled.div`
   padding: 50px 0px 0px;
   max-width: 1200px;
   margin: 0px auto;
+  ${media.desktop`
+    padding: 50px 15px 0px;
+  `};
 `;
 
 const CategoryList = styled.div`
   display: flex;
+  width: 100%;
 `;
 
 const Category = styled(Link)`
@@ -57,6 +62,7 @@ const Category = styled(Link)`
     position: absolute;
     height: 100%;
     width: 100%;
+    object-fit: cover;
     top: 0;
     border-radius: 6px;
     left: 0;
@@ -100,9 +106,9 @@ const ShowAll = styled(Link)`
   }
 `;
 
-const IndexPage = ({ data: { home, services, articles }, savedServices, pageContext: { locale } }) => (
+const IndexPage = ({ data: { home, services, articles }, savedServices, pageContext: { locale }, toggleMenu }) => (
   <Layout locale={locale} hideNavbar>
-    <Hero />
+    <Hero toggleMenu={toggleMenu} />
     <Wrapper>
       <Title>
         <FormattedMessage id='home.servicesForYou' />

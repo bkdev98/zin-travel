@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Spring } from 'react-spring';
 import { Location } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import { IoIosMenu } from 'react-icons/io';
 
 import { throttle } from '../utils/math';
 import { media } from '../utils/media';
@@ -19,6 +20,9 @@ const Logo = styled.div`
   background-size: contain;
   width: 55px;
   height: 55px;
+  ${media.thone`
+    margin-left: 20px;
+  `};
 `;
 
 const ContactButton = styled(Link)`
@@ -72,95 +76,15 @@ const Nav = styled.nav`
   z-index: 12;
   max-width: 1200px;
   margin: 0px auto;
-`;
-
-const Hamburger = styled.div`
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-  margin: 0 -12px 0 0;
-  padding: 15px 5px 15px 15px;
-  cursor: pointer;
-  transition-timing-function: linear;
-  transition-duration: 0.15s;
-  transition-property: opacity, filter;
-  text-transform: none;
-  color: inherit;
-  border: 0;
-  background-color: white;
-  display: none;
-  ${media.desktop`display: flex;`};
-`;
-
-const HamburgerBox = styled.div`
-  position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 24px;
-`;
-
-const HamburgerInner = styled.div`
-  background-color: #D4AF65;
-  position: absolute;
-  width: 30px;
-  height: 2px;
-  border-radius: 2px;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transition-duration: 0.22s;
-  transition-property: transform;
-  transition-delay: ${props => (props.menuOpen ? '0.12s' : '0s')};
-  transform: rotate(${props => (props.menuOpen ? '225deg' : '0deg')});
-  transition-timing-function: cubic-bezier(
-    ${props => (props.menuOpen ? '0.215, 0.61, 0.355, 1' : '0.55, 0.055, 0.675, 0.19')}
-  );
-  &:before,
-  &:after {
-    content: '';
-    display: block;
-    background-color: #D4AF65;
-    position: absolute;
-    left: auto;
-    right: 0;
-    width: 30px;
-    height: 2px;
-    transition-timing-function: ease;
-    transition-duration: 0.15s;
-    transition-property: transform;
-    border-radius: 4px;
-  }
-  &:before {
-    width: ${props => (props.menuOpen ? '100%' : '120%')};
-    top: ${props => (props.menuOpen ? '0' : '-10px')};
-    opacity: ${props => (props.menuOpen ? 0 : 1)};
-    transition: ${props => (props.menuOpen
-    ? 'top 0.1s ease-out, opacity 0.1s ease-out 0.12s'
-    : 'top 0.1s ease-in 0.25s, opacity 0.1s ease-in')};
-  }
-  &:after {
-    width: ${props => (props.menuOpen ? '100%' : '80%')};
-    bottom: ${props => (props.menuOpen ? '0' : '-10px')};
-    transform: rotate(${props => (props.menuOpen ? '-90deg' : '0')});
-    transition: ${props => (props.menuOpen
-    ? 'bottom 0.1s ease-out, transform 0.22s cubic-bezier(0.215, 0.61, 0.355, 1) 0.12s'
-    : 'bottom 0.1s ease-in 0.25s, transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19)')};
-  }
-  ${media.thone`
-    width: 20px;
-    &:before {
-      top: ${props => (props.menuOpen ? '0' : '-8px')};
-    }
-    &:after {
-      bottom: ${props => (props.menuOpen ? '0' : '-8px')};
-    }
+  ${media.desktop`
+    padding: 0px 20px;
   `};
 `;
 
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  ${media.desktop`display: none;`};
+  ${media.tablet`display: none;`};
 `;
 
 const NavList = styled.ol`
@@ -219,6 +143,27 @@ const LogoWrapper = styled(Link)`
 `;
 
 const DELTA = 5;
+
+const MenuBurger = styled.button`
+  background: transparent;
+  color: #4A4A4A;
+  display: none;
+  ${media.tablet`
+    display: block;
+  `};
+  ${media.thone`
+    margin-right: 20px;
+  `};
+  svg {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    ${media.thone`
+      width: 40px;
+      height: 40px;
+    `};
+  }
+`;
 
 class Navbar extends Component {
   state = {
@@ -297,6 +242,7 @@ class Navbar extends Component {
 
   render() {
     const { scrollDirection, menuOpen } = this.state;
+    const { toggleMenu } = this.props;
 
     return (
       <Wrapper scrollDirection={scrollDirection}>
@@ -309,11 +255,9 @@ class Navbar extends Component {
             )}
           </Spring>
 
-          <Hamburger onClick={this.toggleMenu}>
-            <HamburgerBox>
-              <HamburgerInner menuOpen={menuOpen} />
-            </HamburgerBox>
-          </Hamburger>
+          <MenuBurger onClick={toggleMenu}>
+            <IoIosMenu />
+          </MenuBurger>
 
           <NavLinks>
             <Location>
