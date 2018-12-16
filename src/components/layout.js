@@ -44,7 +44,7 @@ class Layout extends Component {
     const { menuOpen } = this.state;
 
     const childrenWithProps = React.Children.map(children, child =>
-      React.cloneElement(child, { toggleMenu: this.toggleMenu })
+      child !== null && React.cloneElement(child, { toggleMenu: this.toggleMenu })
     );
 
     return (
