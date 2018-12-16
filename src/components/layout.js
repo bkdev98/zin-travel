@@ -55,6 +55,7 @@ class Layout extends Component {
             toggleMenu={this.toggleMenu}
             isOpen={menuOpen}
             pageWrapId={'page-wrap'}
+            outerContainerId={'outer-container'}
           />
           {!hideNavbar && <Navbar toggleMenu={this.toggleMenu} />}
           <div id='page-wrap'>

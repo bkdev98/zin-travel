@@ -664,3 +664,7 @@ pre tt:after {
   /* color: white !important;
   background-color: #D4AF65 !important; */
 }
+.bm-burger-button {
+  z-index: -999 !important;
+  display: none !important;
+}
