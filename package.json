@@ -1,8 +1,8 @@
 {
-  "name": "gatsby-starter-default",
-  "description": "Gatsby default starter",
+  "name": "zin-travel",
+  "description": "Zin travel",
   "version": "1.0.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Quoc Khanh <bkdev98@gmail.com>",
   "dependencies": {
     "@material-ui/core": "^3.3.1",
     "@material-ui/icons": "^3.0.1",
@@ -17,7 +17,9 @@
     "gatsby-plugin-netlify-cms": "^3.0.6",
     "gatsby-plugin-offline": "^2.0.5",
     "gatsby-plugin-react-helmet": "^3.0.0",
+    "gatsby-plugin-robots-txt": "^1.3.0",
     "gatsby-plugin-sharp": "^2.0.7",
+    "gatsby-plugin-sitemap": "^2.0.4",
     "gatsby-plugin-styled-components": "^3.0.0",
     "gatsby-source-filesystem": "^2.0.4",
     "gatsby-transformer-remark": "^2.1.11",
@@ -64,13 +66,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "eslint": "^5.7.0",
+    "eslint": "5.7.0",
     "eslint-config-equimper": "^2.2.2",
     "prettier": "^1.14.2",
     "redux-devtools-extension": "^2.13.7"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+    "url": "https://gitlab.innoteq.vn/innoteq/zin-travel"
   }
 }

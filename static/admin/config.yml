@@ -1,5 +1,11 @@
 backend:
-  name: git-gateway
+  name: gitlab
+  repo: innoteq/zin-travel
+  auth_type: implicit
+  app_id: a9ea8b02219939843c174218c09db55bee75129757bc396eeb2955807bc0d0b5
+  api_root: https://gitlab.innoteq.vn/api/v4
+  base_url: https://gitlab.innoteq.vn
+  auth_endpoint: oauth/authorize
 
 media_folder: static/assets
 public_folder: assets

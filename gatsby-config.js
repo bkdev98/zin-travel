@@ -37,6 +37,7 @@ const queries = [
 module.exports = {
   siteMetadata: {
     title: 'Zin Travel | Dịch vụ du lịch của bạn',
+    siteUrl: 'https://eytrip.com.vn',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -65,6 +66,8 @@ module.exports = {
     'gatsby-plugin-styled-components',
     'gatsby-transformer-remark',
     'gatsby-transformer-yaml',
+    'gatsby-plugin-robots-txt',
+    'gatsby-plugin-sitemap',
     {
       resolve: 'gatsby-source-filesystem',
       options: {
