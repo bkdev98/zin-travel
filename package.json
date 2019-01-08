@@ -27,6 +27,7 @@
     "gatsby-transformer-yaml": "^2.1.4",
     "instantsearch.css": "^7.1.0",
     "moment": "^2.22.2",
+    "netlify-cms": "^2.3.2",
     "react": "^16.5.1",
     "react-anchor-link-smooth-scroll": "^1.0.11",
     "react-burger-menu": "^2.5.4",
