@@ -39,7 +39,7 @@ import { newHotelRequest, newGolfRequest } from '../utils/mail';
 import SlideArrow from './slide-arrow';
 import Map from './map';
 import ServiceCard from './service-card';
-import { saveService, unsaveService } from '../actions';
+import { saveService, unsaveService, createRequest } from '../actions';
 import { media } from '../utils/media';
 import MobileMenu from './mobile-menu';
 
@@ -328,7 +328,7 @@ class Layout extends Component {
     fields: {
       startDate: moment().format('YYYY-MM-DD'),
       endDate: moment().add(3, 'days').format('YYYY-MM-DD'),
-      date: moment().add(1, 'days').format('YYYY-MM-DD'),
+      useDate: moment().add(1, 'days').format('YYYY-MM-DD'),
       time: moment().format('HH:mm'),
       customerCount: 2,
       customerName: '',
@@ -378,64 +378,99 @@ class Layout extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     const { fields } = this.state;
-    const { data: { service, contact } } = this.props;
-    if (service.frontmatter.type === 'hotel') {
-      if (!fields.startDate || !fields.endDate || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
-        !fields.customerName.length || !fields.customerPhone.length) {
-        this.setState({
+    const { data: { service, contact }, createRequest } = this.props;
+    if (!fields.useDate || !fields.time || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
+      !fields.customerName.length || !fields.customerPhone.length) {
+      this.setState({
+        showSnackbar: true,
+        snackbarMessage: 'Cần điền đầy đủ thông tin',
+        isError: true,
+      });
+    } else {
+      createRequest({
+        type: service.frontmatter.type,
+        title: `Yêu cầu đặt ${service.frontmatter.title}.`,
+        to_name: contact.edges[0].node.companyName,
+        contact_email: contact.edges[0].node.managerEmail,
+        ...fields,
+      }, {
+        success: () => this.setState({
           showSnackbar: true,
-          snackbarMessage: 'Cần điền đầy đủ thông tin',
-          isError: true,
-        });
-      } else {
-        try {
-          await newHotelRequest({
-            title: `Yêu cầu đặt phòng ${service.frontmatter.title}.`,
-            to_name: contact.edges[0].node.companyName,
-            contact_email: contact.edges[0].node.managerEmail,
-            ...fields,
-          });
-          this.setState({
-            showSnackbar: true,
-            snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
-          });
-        } catch (error) {
-          this.setState({
-            showSnackbar: true,
-            snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
-            isError: true,
-          });
-        }
-      }
-    } else if (service.frontmatter.type === 'restaurant' || service.frontmatter.type === 'golf') {
-      if (!fields.date || !fields.time || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
-        !fields.customerName.length || !fields.customerPhone.length) {
-        this.setState({
+          snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
+          fields: {
+            startDate: moment().format('YYYY-MM-DD'),
+            endDate: moment().add(3, 'days').format('YYYY-MM-DD'),
+            useDate: moment().add(1, 'days').format('YYYY-MM-DD'),
+            time: moment().format('HH:mm'),
+            customerCount: 2,
+            customerName: '',
+            customerPhone: '',
+          },
+        }),
+        failure: () => this.setState({
           showSnackbar: true,
-          snackbarMessage: 'Cần điền đầy đủ thông tin',
+          snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
           isError: true,
-        });
-      } else {
-        try {
-          await newGolfRequest({
-            title: `Yêu cầu đặt ${service.frontmatter.title}.`,
-            to_name: contact.edges[0].node.companyName,
-            contact_email: contact.edges[0].node.managerEmail,
-            ...fields,
-          });
-          this.setState({
-            showSnackbar: true,
-            snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
-          });
-        } catch (error) {
-          this.setState({
-            showSnackbar: true,
-            snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
-            isError: true,
-          });
-        }
-      }
+        }),
+      });
     }
+    // if (service.frontmatter.type === 'hotel') {
+    //   if (!fields.startDate || !fields.endDate || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
+    //     !fields.customerName.length || !fields.customerPhone.length) {
+    //     this.setState({
+    //       showSnackbar: true,
+    //       snackbarMessage: 'Cần điền đầy đủ thông tin',
+    //       isError: true,
+    //     });
+    //   } else {
+    //     try {
+    //       await newHotelRequest({
+    //         title: `Yêu cầu đặt phòng ${service.frontmatter.title}.`,
+    //         to_name: contact.edges[0].node.companyName,
+    //         contact_email: contact.edges[0].node.managerEmail,
+    //         ...fields,
+    //       });
+    //       this.setState({
+    //         showSnackbar: true,
+    //         snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
+    //       });
+    //     } catch (error) {
+    //       this.setState({
+    //         showSnackbar: true,
+    //         snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
+    //         isError: true,
+    //       });
+    //     }
+    //   }
+    // } else if (service.frontmatter.type === 'restaurant' || service.frontmatter.type === 'golf') {
+    //   if (!fields.date || !fields.time || !fields.customerCount || !fields.customerName || !fields.customerPhone ||
+    //     !fields.customerName.length || !fields.customerPhone.length) {
+    //     this.setState({
+    //       showSnackbar: true,
+    //       snackbarMessage: 'Cần điền đầy đủ thông tin',
+    //       isError: true,
+    //     });
+    //   } else {
+    //     try {
+    //       await newGolfRequest({
+    //         title: `Yêu cầu đặt ${service.frontmatter.title}.`,
+    //         to_name: contact.edges[0].node.companyName,
+    //         contact_email: contact.edges[0].node.managerEmail,
+    //         ...fields,
+    //       });
+    //       this.setState({
+    //         showSnackbar: true,
+    //         snackbarMessage: 'Thành công, chúng tôi sẽ liên lạc qua SĐT để xác nhận',
+    //       });
+    //     } catch (error) {
+    //       this.setState({
+    //         showSnackbar: true,
+    //         snackbarMessage: 'Có lỗi xảy ra khi gửi yêu cầu',
+    //         isError: true,
+    //       });
+    //     }
+    //   }
+    // }
   }
 
   handleCloseError = () => {
@@ -474,7 +509,7 @@ class Layout extends Component {
   }
 
   render() {
-    const { data: { service, relatedServices }, classes, savedServices, pageContext: { locale } } = this.props;
+    const { data: { service, relatedServices }, classes, savedServices, pageContext: { locale }, sendingRequest } = this.props;
     const { showGallery, location, fields, showSnackbar, snackbarMessage, isError, menuOpen, modalOpen } = this.state;
     const imageData = service.frontmatter.images.map(image => ({ original: image, thumbnail: image, originalClass: 'gallery-img' }));
     const isSaved = savedServices.findIndex(item => item.id === service.id) >= 0;
@@ -569,8 +604,8 @@ class Layout extends Component {
                       label="Ngày dùng"
                       fullWidth
                       type='date'
-                      value={fields.date}
-                      onChange={e => this.handleChange(e.target.value, 'date')}
+                      value={fields.useDate}
+                      onChange={e => this.handleChange(e.target.value, 'useDate')}
                       margin="normal"
                       variant="outlined"
                       InputLabelProps={{
@@ -669,6 +704,7 @@ class Layout extends Component {
                 size='large'
                 fullWidth
                 color='primary'
+                disabled={sendingRequest}
                 variant='contained'
                 classes={{
                   root: classes.button,
@@ -847,8 +883,8 @@ class Layout extends Component {
                                   label="Ngày dùng"
                                   fullWidth
                                   type='date'
-                                  value={fields.date}
-                                  onChange={e => this.handleChange(e.target.value, 'date')}
+                                  value={fields.useDate}
+                                  onChange={e => this.handleChange(e.target.value, 'useDate')}
                                   margin="normal"
                                   variant="outlined"
                                   InputLabelProps={{
@@ -946,6 +982,7 @@ class Layout extends Component {
                           <Button
                             size='large'
                             fullWidth
+                            disabled={sendingRequest}
                             color='primary'
                             variant='contained'
                             classes={{
@@ -984,9 +1021,11 @@ class Layout extends Component {
 
 export default connect(state => ({
   savedServices: state.services.saved,
+  sendingRequest: state.services.sendingRequest,
 }), {
   saveService,
   unsaveService,
+  createRequest,
 })(withStyles(styles)(Layout));
 
 export const query = graphql`

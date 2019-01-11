@@ -576,10 +576,10 @@ th {
   -moz-font-feature-settings: "tnum";
   -ms-font-feature-settings: "tnum";
   -webkit-font-feature-settings: "tnum";
-  padding-left: 0.96667rem;
-  padding-right: 0.96667rem;
-  padding-top: 0.725rem;
-  padding-bottom: calc(0.725rem - 1px);
+  padding-left: 0.96667rem !important;
+  padding-right: 0.96667rem !important;
+  padding-top: 0.725rem !important;
+  padding-bottom: calc(0.725rem - 1px) !important;
 }
 th:first-child,
 td:first-child {
