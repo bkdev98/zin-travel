@@ -78,6 +78,13 @@ module.exports = {
     {
       resolve: 'gatsby-source-filesystem',
       options: {
+        name: 'images',
+        path: `${__dirname}/static/assets`,
+      },
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
         name: 'articles',
         path: `${__dirname}/static/articles`,
       },
@@ -103,6 +110,9 @@ module.exports = {
       resolve: 'gatsby-plugin-netlify-cms',
       options: {
         enableIdentityWidget: false,
+        htmlTitle: 'Trang quản trị',
+        // modulePath: `${__dirname}/src/utils/inject.js`,
+        // manualInit: true,
       }
     },
   ],

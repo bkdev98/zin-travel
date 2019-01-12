@@ -266,9 +266,9 @@ class LienHePage extends Component {
                       <Image image={info.edges[0].node.contactBackground} />
                       <Information>
                         <Title>{info.edges[0].node.companyName}</Title>
-                        <Meta><FormattedMessage id='contact.address' />: <a>{info.edges[0].node.address}</a></Meta>
-                        <Meta><FormattedMessage id='contact.phone' />: <a>{info.edges[0].node.phone}</a></Meta>
-                        <Meta><FormattedMessage id='contact.email' />: <a>{info.edges[0].node.email}</a></Meta>
+                        <Meta><FormattedMessage id='contact.address' />: <a href='/lien-he'>{info.edges[0].node.address}</a></Meta>
+                        <Meta><FormattedMessage id='contact.phone' />: <a href={`tel:${info.edges[0].node.phone}`}>{info.edges[0].node.phone}</a></Meta>
+                        <Meta><FormattedMessage id='contact.email' />: <a href={`mailto:${info.edges[0].node.email}`}>{info.edges[0].node.email}</a></Meta>
                       </Information>
                     </Col>
                     <Col sm={12} md={6} lg={5}>

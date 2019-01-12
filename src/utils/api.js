@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:7777';
+// const API_URL = 'http://localhost:7777';
+const API_URL = 'http://api.eytrip.com.vn';
 
 export const query = async ({
   method = 'GET',

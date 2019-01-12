@@ -1,3 +1,5 @@
+import { query, ENDPOINTS } from '../utils/api';
+
 export const SAVE_SERVICE = 'save-service';
 export const UNSAVE_SERVICE = 'unsave-service';
 export const CREATE_REQUEST_INITIAL = 'create-request-initial';
@@ -9,8 +11,6 @@ export const GET_REQUEST_LIST_FAILURE = 'get-request-list-failure';
 export const GET_CUSTOMER_LIST_INITIAL = 'get-customer-list-initial';
 export const GET_CUSTOMER_LIST_SUCCESS = 'get-customer-list-success';
 export const GET_CUSTOMER_LIST_FAILURE = 'get-customer-list-failure';
-
-import { query, ENDPOINTS } from '../utils/api';
 
 export const saveService = data => ({
   type: SAVE_SERVICE,

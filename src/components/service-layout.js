@@ -35,7 +35,7 @@ import Snackbar from './snackbar';
 import './layout.css';
 import { typeToText, typeToUrl, typeToButtonText } from '../utils/string';
 import { getUtilityIcon } from '../utils/icon';
-import { newHotelRequest, newGolfRequest } from '../utils/mail';
+// import { newHotelRequest, newGolfRequest } from '../utils/mail';
 import SlideArrow from './slide-arrow';
 import Map from './map';
 import ServiceCard from './service-card';
