@@ -82,6 +82,11 @@ exports.createPages = ({ graphql, actions }) => {
 exports.onCreatePage = ({ page, actions }) => {
   const { createPage, deletePage } = actions;
 
+  if (page.path.match(/^\/admin/)) {
+    page.matchPath = '/admin/*'; // eslint-disable-line
+    createPage(page);
+  }
+
   return new Promise(resolve => {
     deletePage(page);
 
