@@ -60,7 +60,3 @@ Spacious and comfortable room with four-poster bed, private bath, air conditioni
 We offer breakfast, snacks and bar service.
 
 All our guests have also access to the swimming pool, gymnasium, free parking, relaxation area and massage center.
-
-**Interaction with guests**
-
-We offer breakfast, snacks and bar service. All our guests have also access to the swimming pool, gymnasium, free parking, relaxation area and massage center.
