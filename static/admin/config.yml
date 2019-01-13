@@ -9,8 +9,8 @@ backend:
 
 media_folder: static/assets
 public_folder: assets
-display_url: https://eytrip.com.vn/dashboard
-logo_url: https://eytrip.com.vn/static/logo-30e7f6d0acf333c45a5e3150c42d3e96.png
+display_url: /dashboard
+logo_url: /static/cms-logo-e497df7e680ca0e110e754cc92ff1610.png
 
 slug: { encoding: ascii, clean_accents: true }
 
