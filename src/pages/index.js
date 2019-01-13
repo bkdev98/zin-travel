@@ -115,15 +115,15 @@ const IndexPage = ({ data: { home, services, articles }, savedServices, pageCont
       </Title>
       <CategoryList>
         <Category to='/khach-san'>
-          <img src={home.edges[0].node.hotelImage} />
+          <img src={home.edges[0].node.hotelImage} alt='khach-san' />
           <FormattedMessage id='type.hotel' />
         </Category>
         <Category to='/san-golf'>
-          <img src={home.edges[0].node.golfImage} />
+          <img src={home.edges[0].node.golfImage} alt='san-golf' />
           <FormattedMessage id='type.golf' />
         </Category>
         <Category to='/nha-hang'>
-          <img src={home.edges[0].node.restaurantImage} />
+          <img src={home.edges[0].node.restaurantImage} alt='nha-hang' />
           <FormattedMessage id='type.restaurant' />
         </Category>
       </CategoryList>
