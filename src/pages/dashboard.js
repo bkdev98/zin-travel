@@ -68,7 +68,7 @@ class DashboardPage extends Component {
     const { pageContext: { locale }, customerList, requestList } = this.props;
     const { user, showDetail, selected } = this.state;
 
-    if (!user || !user.is_admin) {
+    if (!user) {
       return (
         <Layout locale={locale}>
           <Wrapper>
