@@ -58,7 +58,7 @@ class DashboardPage extends Component {
     const data = await localStorage.getItem('netlify-cms-user');
     const user = JSON.parse(data);
     this.setState({ user });
-    if (user && user.is_admin) {
+    if (user) {
       this.props.getRequestList();
       this.props.getCustomerList();
     }

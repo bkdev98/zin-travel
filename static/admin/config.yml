@@ -10,7 +10,7 @@ backend:
 media_folder: static/assets
 public_folder: assets
 display_url: /dashboard
-logo_url: /static/cms-logo-e497df7e680ca0e110e754cc92ff1610.png
+logo_url: /static/assets/cms-logo.png
 
 slug: { encoding: ascii, clean_accents: true }
 
